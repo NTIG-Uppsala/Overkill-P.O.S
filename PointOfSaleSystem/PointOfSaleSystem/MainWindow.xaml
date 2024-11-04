@@ -7,10 +7,54 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="47*"/>
-            <ColumnDefinition Width="753*"/>
-        </Grid.ColumnDefinitions>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="6*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Point of Sale" FontSize="32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1" Margin="10px">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Row="0" Grid.Column="0" Margin="5px" Content="+1 Kaffe" FontSize="24" Click="Button_Click"/>
+                <Button Grid.Row="0" Grid.Column="1" Margin="5px" Content="+1 Te" FontSize="24" Click="Button_Click"/>
+                <Button Grid.Row="0" Grid.Column="2" Margin="5px" Content="+1 Chokladboll" FontSize="16" Click="Button_Click"/>
+                <Button Grid.Row="1" Grid.Column="0" Margin="5px" Content="+1 Kanelbulle" FontSize="16" Click="Button_Click"/>
+                <Button Grid.Row="1" Grid.Column="1" Margin="5px" Content="+1 Kärleksmums" FontSize="14" Click="Button_Click"/>
+                <Button Grid.Row="1" Grid.Column="2" Margin="5px" Content="+1 Dammsugare" FontSize="14" Click="Button_Click"/>
+                <Button Grid.Row="2" Grid.Column="0" Margin="5px" Content="+1 Varm choklad" FontSize="14" Click="Button_Click"/>
+                <Button Grid.Row="2" Grid.Column="1" Margin="5px" Content="+1 Kaffe latte" FontSize="16" Click="Button_Click"/>
+                <Button Grid.Row="2" Grid.Column="2" Margin="5px" Content="+1 Espresso" FontSize="18" Click="Button_Click"/>
+            </Grid>
+            <Grid Grid.Column="0" Margin="15px">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Resultat" FontSize="24" HorizontalAlignment="Center"/>
+                <ListBox Grid.Row="1" Name="ResultListBox" FontSize="16"/>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="Totalpris:" FontSize="16" VerticalAlignment="Center" />
+                    <TextBox Grid.Column="1" Text="... kr" FontSize="16" VerticalAlignment="Center"/>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
