@@ -20,5 +20,39 @@ namespace PointOfSaleSystem
         {
             InitializeComponent();
         }
+
+        private void plus1Kaffe_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateItemCount("Kaffe");
+        }
+
+        private void plus1Te_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateItemCount("Te");
+        }
+
+        private void UpdateItemCount(string itemName)
+        {
+            bool itemFound = false;
+
+            for (int i = 0; i < ResultListBox.Items.Count; i++)
+            {
+                string currentItem = ResultListBox.Items[i].ToString();
+                if (currentItem.Contains(itemName))
+                {
+                    string[] split = currentItem.Split(' ');
+                    int antal = int.Parse(split[0]);
+                    antal++;
+                    ResultListBox.Items[i] = antal + " " + itemName;
+                    itemFound = true;
+                    break;
+                }
+            }
+
+            if (!itemFound)
+            {
+                ResultListBox.Items.Add("1 " + itemName);
+            }
+        }
     }
 }
