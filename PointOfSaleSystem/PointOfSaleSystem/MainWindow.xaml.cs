@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,6 +17,12 @@ namespace PointOfSaleSystem
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Dictionary<string, double> itemPrices = new Dictionary<string, double>
+        {
+            { "Kaffe", 32.0 },
+            { "Te", 25.0 }
+        };
+
         public MainWindow()
         {
             InitializeComponent();
@@ -53,6 +60,29 @@ namespace PointOfSaleSystem
             {
                 ResultListBox.Items.Add("1 " + itemName);
             }
+
+            UpdateTotalPrice();
         }
+
+        private void UpdateTotalPrice()
+        {
+            double totalPrice = 0.0;
+
+            foreach (var item in ResultListBox.Items)
+            {
+                string[] split = item.ToString().Split(' ');
+                int antal = int.Parse(split[0]);
+                string itemName = split[1];
+                totalPrice += antal * itemPrices[itemName];
+            }
+
+            TotalPriceTextBlock.Text = $"Totalpris: {totalPrice} kr";
+        }
+        private void NollställButton_Click(object sender, RoutedEventArgs e)
+        {
+            ResultListBox.Items.Clear();
+            TotalPriceTextBlock.Text = "Totalpris: 0 kr";
+        }
+
     }
 }

@@ -19,7 +19,8 @@ namespace TestSystem
                 Trace.WriteLine(window.Title);
 
                 var testplus1Kaffe = window.FindFirstDescendant(cf.ByAutomationId("plus1Kaffe"))?.AsButton();
-                var resultat = window.FindFirstDescendant(cf.ByAutomationId("ResultatListBox"))?.AsListBoxItem();
+                var resultat = window.FindFirstDescendant(cf.ByAutomationId("ResultatListBox"))?.AsListBox();
+                var totalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("TotalPriceTextBlock"))?.AsLabel();
 
                 if (testplus1Kaffe == null)
                 {
@@ -29,14 +30,32 @@ namespace TestSystem
 
                 if (resultat == null)
                 {
-                    Trace.WriteLine("TextBox 'Resultat' not found.");
-                    Assert.Fail("TextBox 'Resultat' not found.");
+                    Trace.WriteLine("ListBox 'Resultat' not found.");
+                    Assert.Fail("ListBox 'Resultat' not found.");
+                }
+
+                if (totalPriceTextBlock == null)
+                {
+                    Trace.WriteLine("TextBlock 'TotalPriceTextBlock' not found.");
+                    Assert.Fail("TextBlock 'TotalPriceTextBlock' not found.");
                 }
 
                 testplus1Kaffe.Click();
                 testplus1Kaffe.Click();
                 testplus1Kaffe.Click();
-                Trace.Assert(resultat.Text == "3 Kaffe");
+                Assert.AreEqual("3 Kaffe", resultat.Items[0].Text);
+
+                var nollställButton = window.FindFirstDescendant(cf.ByAutomationId("NollställButton"))?.AsButton();
+                if (nollställButton == null)
+                {
+                    Trace.WriteLine("Button 'Nollställ' not found.");
+                    Assert.Fail("Button 'Nollställ' not found.");
+                }
+
+                nollställButton.Click();
+                nollställButton.Click();
+                Assert.AreEqual(0, resultat.Items.Length);
+                Assert.AreEqual("Totalpris: 0 kr", totalPriceTextBlock.Text);
             }
         }
     }
