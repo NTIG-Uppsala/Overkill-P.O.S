@@ -20,7 +20,9 @@ namespace PointOfSaleSystem
         private Dictionary<string, double> itemPrices = new Dictionary<string, double>
         {
             { "Kaffe", 32.0 },
-            { "Te", 25.0 }
+            { "Te", 25.0 },
+            { "Vetelängd", 20.0 },
+            { "Tekaka", 18.0 }
         };
 
         public MainWindow()
@@ -38,6 +40,15 @@ namespace PointOfSaleSystem
             UpdateItemCount("Te");
         }
 
+        private void plus1Vetelängd_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateItemCount("Vetelängd");
+        }
+        private void plus1Tekaka_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateItemCount("Tekaka");
+        }
+
         private void UpdateItemCount(string itemName)
         {
             bool itemFound = false;
@@ -45,9 +56,11 @@ namespace PointOfSaleSystem
             for (int i = 0; i < ResultListBox.Items.Count; i++)
             {
                 string currentItem = ResultListBox.Items[i].ToString();
-                if (currentItem.Contains(itemName))
+                string[] split = currentItem.Split(' ');
+                string currentItemName = split[1];
+
+                if (currentItemName == itemName)
                 {
-                    string[] split = currentItem.Split(' ');
                     int antal = int.Parse(split[0]);
                     antal++;
                     ResultListBox.Items[i] = antal + " " + itemName;

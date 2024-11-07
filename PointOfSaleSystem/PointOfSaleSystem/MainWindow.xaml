@@ -30,9 +30,9 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Row="0" Grid.Column="0" Margin="5px" Content="+1 Kaffe" FontSize="24" Name="plus1Kaffe" Click="plus1Kaffe_Click" AutomationProperties.AutomationId="plus1Kaffe"/>
                 <Button Grid.Row="0" Grid.Column="1" Margin="5px" Content="+1 Te" FontSize="24" Name="plus1Te" Click="plus1Te_Click"/>
-                <!--<Button Grid.Row="0" Grid.Column="2" Margin="5px" Content="+1 Chokladboll" FontSize="16" Click="Button_Click"/>
-                <Button Grid.Row="1" Grid.Column="0" Margin="5px" Content="+1 Kanelbulle" FontSize="16" Click="Button_Click"/>
-                <Button Grid.Row="1" Grid.Column="1" Margin="5px" Content="+1 Kärleksmums" FontSize="14" Click="Button_Click"/>
+                <Button Grid.Row="0" Grid.Column="2" Margin="5px" Content="+1 Vetelängd" FontSize="16" Name="plus1Vetelängd" Click="plus1Vetelängd_Click"/>
+                <Button Grid.Row="1" Grid.Column="0" Margin="5px" Content="+1 Tekaka" FontSize="16" Name="plus1Tekaka" Click="plus1Tekaka_Click"/>
+                <!--<Button Grid.Row="1" Grid.Column="1" Margin="5px" Content="+1 Kärleksmums" FontSize="14" Click="Button_Click"/>
                 <Button Grid.Row="1" Grid.Column="2" Margin="5px" Content="+1 Dammsugare" FontSize="14" Click="Button_Click"/>
                 <Button Grid.Row="2" Grid.Column="0" Margin="5px" Content="+1 Varm choklad" FontSize="14" Click="Button_Click"/>
                 <Button Grid.Row="2" Grid.Column="1" Margin="5px" Content="+1 Kaffe latte" FontSize="16" Click="Button_Click"/>
