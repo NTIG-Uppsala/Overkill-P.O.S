@@ -18,44 +18,43 @@ namespace TestSystem
                 ConditionFactory cf = new ConditionFactory(new UIA3PropertyLibrary());
                 Trace.WriteLine(window.Title);
 
-                var testplus1Kaffe = window.FindFirstDescendant(cf.ByAutomationId("plus1Kaffe"))?.AsButton();
-                var resultat = window.FindFirstDescendant(cf.ByAutomationId("ResultatListBox"))?.AsListBox();
-                var totalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("TotalPriceTextBlock"))?.AsLabel();
+                var testPlus1Espresso = window.FindFirstDescendant(cf.ByAutomationId("plus1Espresso"))?.AsButton();
+                var testCustomerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
+                var testTotalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("TotalPriceTextBlock"))?.AsLabel();
 
-                if (testplus1Kaffe == null)
+                if (testPlus1Espresso == null)
                 {
-                    Trace.WriteLine("Button 'plus1Kaffe' not found.");
-                    Assert.Fail("Button 'plus1Kaffe' not found.");
+                    Trace.WriteLine("Button 'plus1Espresso' not found.");
+                    Assert.Fail("Button 'plus1Espresso' not found.");
                 }
 
-                if (resultat == null)
+                if (testCustomerOrderListBox == null)
                 {
-                    Trace.WriteLine("ListBox 'Resultat' not found.");
-                    Assert.Fail("ListBox 'Resultat' not found.");
+                    Trace.WriteLine("ListBox 'customerOrderListBox' not found.");
+                    Assert.Fail("ListBox 'customerOrderListBox' not found.");
                 }
 
-                if (totalPriceTextBlock == null)
+                if (testTotalPriceTextBlock == null)
                 {
                     Trace.WriteLine("TextBlock 'TotalPriceTextBlock' not found.");
                     Assert.Fail("TextBlock 'TotalPriceTextBlock' not found.");
                 }
 
-                testplus1Kaffe.Click();
-                testplus1Kaffe.Click();
-                testplus1Kaffe.Click();
-                Assert.AreEqual("3 Kaffe", resultat.Items[0].Text);
+                testPlus1Espresso.Click();
+                testPlus1Espresso.Click();
+                testPlus1Espresso.Click();
+                Assert.AreEqual("3 | Espresso", testCustomerOrderListBox.Items[0].Text);
 
-                var nollställButton = window.FindFirstDescendant(cf.ByAutomationId("NollställButton"))?.AsButton();
-                if (nollställButton == null)
+                var resetButton = window.FindFirstDescendant(cf.ByAutomationId("ResetButton"))?.AsButton();
+                if (resetButton == null)
                 {
-                    Trace.WriteLine("Button 'Nollställ' not found.");
-                    Assert.Fail("Button 'Nollställ' not found.");
+                    Trace.WriteLine("Button 'ResetButton' not found.");
+                    Assert.Fail("Button 'ResetButton' not found.");
                 }
 
-                nollställButton.Click();
-                nollställButton.Click();
-                Assert.AreEqual(0, resultat.Items.Length);
-                Assert.AreEqual("Totalpris: 0 kr", totalPriceTextBlock.Text);
+                resetButton.Click();
+                Assert.AreEqual(0, testCustomerOrderListBox.Items.Length);
+                Assert.AreEqual("Total Price: 0 SEK", testTotalPriceTextBlock.Text);
             }
         }
     }

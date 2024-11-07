@@ -19,10 +19,15 @@ namespace PointOfSaleSystem
     {
         private Dictionary<string, double> itemPrices = new Dictionary<string, double>
         {
-            { "Kaffe", 32.0 },
-            { "Te", 25.0 },
-            { "Vetelängd", 20.0 },
-            { "Tekaka", 18.0 }
+            { "Espresso", 32.0 },
+            { "Tea", 25.0 },
+            { "Latte", 20.0 },
+            { "Americano", 18.0 },
+            { "Cappuccino", 30.0 },
+            { "Mocha", 35.0 },
+            { "Hot Chocolate", 28.0 },
+            { "Macchiato", 25.0 },
+            { "Flat White", 22.0 }
         };
 
         public MainWindow()
@@ -30,40 +35,66 @@ namespace PointOfSaleSystem
             InitializeComponent();
         }
 
-        private void plus1Kaffe_Click(object sender, RoutedEventArgs e)
+        private void plus1Espresso_Click(object sender, RoutedEventArgs e)
         {
-            UpdateItemCount("Kaffe");
+            UpdateItemCount("Espresso");
         }
 
-        private void plus1Te_Click(object sender, RoutedEventArgs e)
+        private void plus1Tea_Click(object sender, RoutedEventArgs e)
         {
-            UpdateItemCount("Te");
+            UpdateItemCount("Tea");
         }
 
-        private void plus1Vetelängd_Click(object sender, RoutedEventArgs e)
+        private void plus1Latte_Click(object sender, RoutedEventArgs e)
         {
-            UpdateItemCount("Vetelängd");
+            UpdateItemCount("Latte");
         }
-        private void plus1Tekaka_Click(object sender, RoutedEventArgs e)
+
+        private void plus1Americano_Click(object sender, RoutedEventArgs e)
         {
-            UpdateItemCount("Tekaka");
+            UpdateItemCount("Americano");
+        }
+
+        private void plus1Cappuccino_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateItemCount("Cappuccino");
+        }
+
+        private void plus1Mocha_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateItemCount("Mocha");
+        }
+
+        private void plus1HotChocolate_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateItemCount("Hot Chocolate");
+        }
+
+        private void plus1Macchiato_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateItemCount("Macchiato");
+        }
+
+        private void plus1FlatWhite_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateItemCount("Flat White");
         }
 
         private void UpdateItemCount(string itemName)
         {
             bool itemFound = false;
 
-            for (int i = 0; i < ResultListBox.Items.Count; i++)
+            for (int i = 0; i < customerOrderListBox.Items.Count; i++)
             {
-                string currentItem = ResultListBox.Items[i].ToString();
-                string[] split = currentItem.Split(' ');
-                string currentItemName = split[1];
+                string currentItem = customerOrderListBox.Items[i].ToString();
+                string[] split = currentItem.Split('|');
+                string currentItemName = split[1].Trim();
 
                 if (currentItemName == itemName)
                 {
-                    int antal = int.Parse(split[0]);
+                    int antal = int.Parse(split[0].Trim());
                     antal++;
-                    ResultListBox.Items[i] = antal + " " + itemName;
+                    customerOrderListBox.Items[i] = $"{antal} | {itemName}";
                     itemFound = true;
                     break;
                 }
@@ -71,7 +102,7 @@ namespace PointOfSaleSystem
 
             if (!itemFound)
             {
-                ResultListBox.Items.Add("1 " + itemName);
+                customerOrderListBox.Items.Add($"1 | {itemName}");
             }
 
             UpdateTotalPrice();
@@ -81,21 +112,21 @@ namespace PointOfSaleSystem
         {
             double totalPrice = 0.0;
 
-            foreach (var item in ResultListBox.Items)
+            foreach (var item in customerOrderListBox.Items)
             {
-                string[] split = item.ToString().Split(' ');
-                int antal = int.Parse(split[0]);
-                string itemName = split[1];
+                string[] split = item.ToString().Split('|');
+                int antal = int.Parse(split[0].Trim());
+                string itemName = split[1].Trim();
                 totalPrice += antal * itemPrices[itemName];
             }
 
-            TotalPriceTextBlock.Text = $"Totalpris: {totalPrice} kr";
-        }
-        private void NollställButton_Click(object sender, RoutedEventArgs e)
-        {
-            ResultListBox.Items.Clear();
-            TotalPriceTextBlock.Text = "Totalpris: 0 kr";
+            TotalPriceTextBlock.Text = $"Total Price: {totalPrice} SEK";
         }
 
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            customerOrderListBox.Items.Clear();
+            TotalPriceTextBlock.Text = "Total Price: 0 SEK";
+        }
     }
 }

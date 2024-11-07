@@ -28,15 +28,15 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Row="0" Grid.Column="0" Margin="5px" Content="+1 Kaffe" FontSize="24" Name="plus1Kaffe" Click="plus1Kaffe_Click" AutomationProperties.AutomationId="plus1Kaffe"/>
-                <Button Grid.Row="0" Grid.Column="1" Margin="5px" Content="+1 Te" FontSize="24" Name="plus1Te" Click="plus1Te_Click"/>
-                <Button Grid.Row="0" Grid.Column="2" Margin="5px" Content="+1 Vetelängd" FontSize="16" Name="plus1Vetelängd" Click="plus1Vetelängd_Click"/>
-                <Button Grid.Row="1" Grid.Column="0" Margin="5px" Content="+1 Tekaka" FontSize="16" Name="plus1Tekaka" Click="plus1Tekaka_Click"/>
-                <!--<Button Grid.Row="1" Grid.Column="1" Margin="5px" Content="+1 Kärleksmums" FontSize="14" Click="Button_Click"/>
-                <Button Grid.Row="1" Grid.Column="2" Margin="5px" Content="+1 Dammsugare" FontSize="14" Click="Button_Click"/>
-                <Button Grid.Row="2" Grid.Column="0" Margin="5px" Content="+1 Varm choklad" FontSize="14" Click="Button_Click"/>
-                <Button Grid.Row="2" Grid.Column="1" Margin="5px" Content="+1 Kaffe latte" FontSize="16" Click="Button_Click"/>
-                <Button Grid.Row="2" Grid.Column="2" Margin="5px" Content="+1 Espresso" FontSize="18" Click="Button_Click"/>-->
+                <Button Grid.Row="0" Grid.Column="0" Margin="5px" FontSize="20" Content="+1 Espresso"      Name="plus1Espresso"     Click="plus1Espresso_Click"     AutomationProperties.AutomationId="plus1Espresso"    />
+                <Button Grid.Row="0" Grid.Column="1" Margin="5px" FontSize="24" Content="+1 Tea"           Name="plus1Tea"          Click="plus1Tea_Click"          AutomationProperties.AutomationId="plus1Tea"         />
+                <Button Grid.Row="0" Grid.Column="2" Margin="5px" FontSize="24" Content="+1 Latte"         Name="plus1Latte"        Click="plus1Latte_Click"        AutomationProperties.AutomationId="plus1Latte"       />
+                <Button Grid.Row="1" Grid.Column="0" Margin="5px" FontSize="16" Content="+1 Americano"     Name="plus1Americano"    Click="plus1Americano_Click"    AutomationProperties.AutomationId="plus1Americano"   />
+                <Button Grid.Row="1" Grid.Column="1" Margin="5px" FontSize="16" Content="+1 Cappuccino"    Name="plus1Cappuccino"   Click="plus1Cappuccino_Click"   AutomationProperties.AutomationId="plus1Cappuccino"  />
+                <Button Grid.Row="1" Grid.Column="2" Margin="5px" FontSize="20" Content="+1 Mocha"         Name="plus1Mocha"        Click="plus1Mocha_Click"        AutomationProperties.AutomationId="plus1Mocha"       />
+                <Button Grid.Row="2" Grid.Column="0" Margin="5px" FontSize="12" Content="+1 Hot Chocolate" Name="plus1HotChocolate" Click="plus1HotChocolate_Click" AutomationProperties.AutomationId="plus1HotChocolate"/>
+                <Button Grid.Row="2" Grid.Column="1" Margin="5px" FontSize="16" Content="+1 Macchiato"     Name="plus1Macchiato"    Click="plus1Macchiato_Click"    AutomationProperties.AutomationId="plus1Macchiato"   />
+                <Button Grid.Row="2" Grid.Column="2" Margin="5px" FontSize="16" Content="+1 Flat White"    Name="plus1FlatWhite"    Click="plus1FlatWhite_Click"    AutomationProperties.AutomationId="plus1FlatWhite"   />
             </Grid>
             <Grid Grid.Column="0" Margin="15px">
                 <Grid.RowDefinitions>
@@ -44,17 +44,17 @@
                     <RowDefinition Height="5*"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="Resultat" FontSize="24" HorizontalAlignment="Center" />
-                <ListBox Grid.Row="1" Name="ResultListBox" FontSize="16" AutomationProperties.AutomationId="ResultatListBox"/>
+                <TextBlock Grid.Row="0" Text="Customer Order" FontSize="24" HorizontalAlignment="Center"/>
+                <ListBox Grid.Row="1" FontSize="16" Name="customerOrderListBox" AutomationProperties.AutomationId="customerOrderListBox"/>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock x:Name="TotalPriceTextBlock" Grid.Column="0" Margin="5px" Text="Totalpris: . . . kr" FontSize="16" VerticalAlignment="Center" />
-                    <!-- <Button Grid.Column="1" Margin="5px 10px 5px 5px" Content="Betala" FontSize="16" Name="BetalaButton" Click="BetalaButton_Click"/> -->
-                    <Button Grid.Column="2" Margin="5px 10px 5px 5px" Content="Nollställ" FontSize="16" Name="NollställButton" Click="NollställButton_Click"/>
+                    <TextBlock Grid.Column="0" Margin="5px" x:Name="TotalPriceTextBlock" Text="Total Price: 0 SEK" FontSize="16" VerticalAlignment="Center" />
+                    <!-- <Button Grid.Column="1" Margin="5px 10px 5px 5px" Content="Pay" FontSize="16" Name="PayButton" Click="PayButton_Click"/> -->
+                    <Button Grid.Column="2" Margin="5px 10px 5px 5px" Content="Reset" FontSize="16" Name="ResetButton" Click="ResetButton_Click"/>
                 </Grid>
             </Grid>
         </Grid>
