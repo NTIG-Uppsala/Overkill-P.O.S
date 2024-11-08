@@ -34,7 +34,7 @@ namespace TestSystem
                 Assert.AreEqual("Total Price: 0 SEK", testTotalPriceTextBlock.Text);
             }
         }
-    
+
 
         [TestMethod]
         public void TestMethod2()

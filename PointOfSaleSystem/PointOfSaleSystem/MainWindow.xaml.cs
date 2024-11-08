@@ -19,7 +19,9 @@ namespace PointOfSaleSystem
     public partial class MainWindow : Window
     {
         private List<Product> customerOrder = new List<Product>();
-        private double totalPrice = 0.0;
+
+        // The total price of the order
+        private double totalPrice = 0;
 
         public class Product
         {
@@ -38,7 +40,7 @@ namespace PointOfSaleSystem
         }
 
 
-
+        //List of products
         private readonly List<Product> products = new List<Product>
         {
             new Product("Tea", 25.0),
@@ -52,12 +54,14 @@ namespace PointOfSaleSystem
             new Product("Espresso", 32.0)
         };
 
+        //Constructor
         public MainWindow()
         {
             InitializeComponent();
             CreateProductButtons();
         }
 
+        //Method to create product buttons
         private void CreateProductButtons()
         {
             ButtonGrid.Children.Clear(); // Clear any existing buttons
@@ -92,38 +96,38 @@ namespace PointOfSaleSystem
             }
         }
 
+        //Method to handle product button click
         private void ProductButton_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            Product product = button?.Tag as Product;
+            // Cast the sender as Button to get the product info from the Tag
+            Button productButton = sender as Button;
+            Product clickedProduct = productButton.Tag as Product;
 
-            if (product == null)
-                return;
-
-            // Check if the product already exists in the order list
-            var existingItem = customerOrder.FirstOrDefault(item => item.Name == product.Name);
-
-            if (existingItem != null)
+            // Check if the product is already in the customer order
+            Product existingProduct = customerOrder.Find(p => p.Name == clickedProduct.Name);
+            if (existingProduct != null)
             {
-                // Increment quantity if it already exists
-                existingItem.Quantity++;
-
-                // Update ListBox display for the existing item
-                int index = customerOrderListBox.Items.IndexOf($"{existingItem.Quantity - 1} | {existingItem.Name}");
-                customerOrderListBox.Items[index] = $"{existingItem.Quantity} | {existingItem.Name}";
+                // If it exists, increase the quantity
+                existingProduct.Quantity++;
             }
             else
             {
-                // Add the product as a new item if it doesn't exist
-                var newProduct = new Product(product.Name, product.Price, 1);  // Start with quantity 1
+                // If it doesn't exist, add a new entry
+                Product newProduct = new Product(clickedProduct.Name, clickedProduct.Price);
                 customerOrder.Add(newProduct);
-
-                // Display in ListBox
-                customerOrderListBox.Items.Add($"{newProduct.Quantity} | {newProduct.Name}");
             }
 
-            // Update total price
-            totalPrice += product.Price;
+            // Update the total price
+            totalPrice += clickedProduct.Price;
+
+            // Refresh the ListBox display to show the updated order
+            customerOrderListBox.Items.Clear();
+            foreach (var product in customerOrder)
+            {
+                customerOrderListBox.Items.Add($"{product.Quantity} | {product.Name}");
+            }
+
+            // Update the total price text block
             TotalPriceTextBlock.Text = $"Total Price: {totalPrice} SEK";
         }
 
@@ -136,9 +140,19 @@ namespace PointOfSaleSystem
             }
         }
 
+        //Method to handle reset button click
         private void ResetButton_Click(object sender, RoutedEventArgs e)
         {
+            // Clear the product list
+            customerOrder.Clear();
+
+            // Reset the total price
+            totalPrice = 0;
+
+            // Clear the ListBox to reflect the reset state
             customerOrderListBox.Items.Clear();
+
+            // Update the total price text block
             TotalPriceTextBlock.Text = "Total Price: 0 SEK";
         }
     }

@@ -32,7 +32,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Existing buttons within the grid -->
-                
+
             </Grid>
 
             <!-- Other elements within the outer grid -->
