@@ -1,119 +1,138 @@
-using System.Diagnostics;
-using FlaUI.UIA3;
+using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Conditions;
+using FlaUI.UIA3;
+using System.Diagnostics;
 
 namespace TestSystem
 {
-    [TestClass]
+    [TestClass] // While running the tests, DO NOT move the mouse and/or interact with your computer.
     public class UnitTest1
     {
-        [TestMethod]
-        public void TestMethod1()
+        private static string appPath = @"..\..\..\..\PointOfSaleSystem\bin\Debug\net8.0-windows\PointOfSaleSystem.exe";
+        private Application app;
+        private UIA3Automation automation;
+        private Window window;
+        private ConditionFactory cf;
+
+        [TestInitialize] // Initializes the application and automation objects before each test method.
+        public void TestInitialize()
         {
-            var app = FlaUI.Core.Application.Launch(@"..\..\..\..\PointOfSaleSystem\bin\Debug\net8.0-windows\PointOfSaleSystem.exe");
-            using (var automation = new UIA3Automation())
+            app = FlaUI.Core.Application.Launch(appPath);
+            automation = new UIA3Automation();
+            window = app.GetMainWindow(automation);
+            cf = new ConditionFactory(new UIA3PropertyLibrary());
+        }
+
+        [TestCleanup] // Closes the window and disposes of the automation object after each test method.
+        public void TestCleanup()
+        {
+            automation.Dispose();
+            app.Close();
+        }
+
+        // Clicks a button with the specified automation ID a given number of times.
+        private void ClickButton(string automationId, int count)
+        {
+            var button = window.FindFirstDescendant(cf.ByAutomationId(automationId))?.AsButton();
+            for (int i = 0; i < count; i++)
             {
-                var window = app.GetMainWindow(automation);
-                ConditionFactory cf = new ConditionFactory(new UIA3PropertyLibrary());
-                Trace.WriteLine(window.Title);
-
-                var testPlus1Espresso = window.FindFirstDescendant(cf.ByAutomationId("plus1Espresso"))?.AsButton();
-                var testCustomerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
-                var testTotalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("TotalPriceTextBlock"))?.AsLabel();
-
-                testPlus1Espresso.Click();
-                testPlus1Espresso.Click();
-                testPlus1Espresso.Click();
-                Assert.AreEqual("3 | Espresso", testCustomerOrderListBox.Items[0].Text);
-
-                var resetButton = window.FindFirstDescendant(cf.ByAutomationId("ResetButton"))?.AsButton();
-
-                resetButton.Click();
-                Assert.AreEqual(0, testCustomerOrderListBox.Items.Length);
-                Assert.AreEqual("Total Price: 0 SEK", testTotalPriceTextBlock.Text);
+                button.Click();
             }
         }
 
-
-        [TestMethod]
-        public void TestMethod2()
+        // Clicks the reset button a given number of times.
+        private void ClickResetButton(int count)
         {
-            var app = FlaUI.Core.Application.Launch(@"..\..\..\..\PointOfSaleSystem\bin\Debug\net8.0-windows\PointOfSaleSystem.exe");
-            using (var automation = new UIA3Automation())
+            var resetButton = window.FindFirstDescendant(cf.ByAutomationId("ResetButton"))?.AsButton();
+            for (int i = 0; i < count; i++)
             {
-                var window = app.GetMainWindow(automation);
-                ConditionFactory cf = new ConditionFactory(new UIA3PropertyLibrary());
-                Trace.WriteLine(window.Title);
-
-                var testPlus1Espresso = window.FindFirstDescendant(cf.ByAutomationId("plus1Espresso"))?.AsButton();
-                var testCustomerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
-                var testTotalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("TotalPriceTextBlock"))?.AsLabel();
-
-                testPlus1Espresso.Click();
-                Assert.AreEqual("Total Price: 32 SEK", testTotalPriceTextBlock.Text);
-
-                var resetButton = window.FindFirstDescendant(cf.ByAutomationId("ResetButton"))?.AsButton();
-
                 resetButton.Click();
-                Assert.AreEqual(0, testCustomerOrderListBox.Items.Length);
-                Assert.AreEqual("Total Price: 0 SEK", testTotalPriceTextBlock.Text);
             }
         }
 
-        [TestMethod]
-        public void TestMethod3()
+        // Verifies that the order list and total price match the expected values.
+        private void VerifyOrder(string[] expectedOrderTexts, string expectedTotalPrice)
         {
-            var app = FlaUI.Core.Application.Launch(@"..\..\..\..\PointOfSaleSystem\bin\Debug\net8.0-windows\PointOfSaleSystem.exe");
-            using (var automation = new UIA3Automation())
+            var testCustomerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
+            var testTotalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("TotalPriceTextBlock"))?.AsLabel();
+
+            Assert.AreEqual(expectedOrderTexts.Length, testCustomerOrderListBox.Items.Length);
+
+            for (int i = 0; i < expectedOrderTexts.Length; i++)
             {
-                var window = app.GetMainWindow(automation);
-                ConditionFactory cf = new ConditionFactory(new UIA3PropertyLibrary());
-                Trace.WriteLine(window.Title);
-
-                var testPlus1Tea = window.FindFirstDescendant(cf.ByAutomationId("plus1Tea"))?.AsButton();
-                var testCustomerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
-                var testTotalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("TotalPriceTextBlock"))?.AsLabel();
-
-                testPlus1Tea.Click();
-                testPlus1Tea.Click();
-                testPlus1Tea.Click();
-                Assert.AreEqual("3 | Tea", testCustomerOrderListBox.Items[0].Text);
-                Assert.AreEqual("Total Price: 75 SEK", testTotalPriceTextBlock.Text);
-
-                var resetButton = window.FindFirstDescendant(cf.ByAutomationId("ResetButton"))?.AsButton();
-
-                resetButton.Click();
-                Assert.AreEqual(0, testCustomerOrderListBox.Items.Length);
-                Assert.AreEqual("Total Price: 0 SEK", testTotalPriceTextBlock.Text);
+                Assert.AreEqual(expectedOrderTexts[i], testCustomerOrderListBox.Items[i].Text);
             }
+
+            Assert.AreEqual(expectedTotalPrice, testTotalPriceTextBlock.Text);
         }
 
-        [TestMethod]
-        public void TestMethod4()
+        // Verifies that the order list is empty and the total price is reset.
+        private void VerifyReset()
         {
-            var app = FlaUI.Core.Application.Launch(@"..\..\..\..\PointOfSaleSystem\bin\Debug\net8.0-windows\PointOfSaleSystem.exe");
-            using (var automation = new UIA3Automation())
-            {
-                var window = app.GetMainWindow(automation);
-                ConditionFactory cf = new ConditionFactory(new UIA3PropertyLibrary());
-                Trace.WriteLine(window.Title);
+            var testCustomerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
+            var testTotalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("TotalPriceTextBlock"))?.AsLabel();
 
-                var testPlus1Mocha = window.FindFirstDescendant(cf.ByAutomationId("plus1Mocha"))?.AsButton();
-                var testCustomerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
-                var testTotalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("TotalPriceTextBlock"))?.AsLabel();
+            Assert.AreEqual(0, testCustomerOrderListBox.Items.Length);
+            Assert.AreEqual("Total Price: 0 SEK", testTotalPriceTextBlock.Text);
+        }
 
-                testPlus1Mocha.Click();
-                testPlus1Mocha.Click();
-                Assert.AreEqual("2 | Mocha", testCustomerOrderListBox.Items[0].Text);
-                Assert.AreEqual("Total Price: 70 SEK", testTotalPriceTextBlock.Text);
+        [TestMethod] // Adds one espresso to the order.
+        public void VerifyEspressoOrder()
+        {
+            Trace.WriteLine(window.Title);
 
-                var resetButton = window.FindFirstDescendant(cf.ByAutomationId("ResetButton"))?.AsButton();
+            ClickButton("plus1Espresso", 1);
+            VerifyOrder(new string[] { "1 | Espresso" }, "Total Price: 32 SEK");
+        }
 
-                resetButton.Click();
-                Assert.AreEqual(0, testCustomerOrderListBox.Items.Length);
-                Assert.AreEqual("Total Price: 0 SEK", testTotalPriceTextBlock.Text);
-            }
+        [TestMethod] // Adds two teas to the order and then resets the order.
+        public void VerifyTeaResetOrder()
+        {
+            Trace.WriteLine(window.Title);
+
+            ClickButton("plus1Tea", 2);
+            VerifyOrder(new string[] { "2 | Tea" }, "Total Price: 50 SEK");
+
+            ClickResetButton(1);
+            VerifyReset();
+        }
+
+        [TestMethod] // Adds one mocha to the order, resets the order, and then adds three macchiatos.
+        public void VerifyMochaResetMacchiatoOrder()
+        {
+            Trace.WriteLine(window.Title);
+
+            ClickButton("plus1Mocha", 1);
+
+            ClickResetButton(1);
+
+            ClickButton("plus1Macchiato", 3);
+
+            VerifyOrder(new string[] { "3 | Macchiato" }, "Total Price: 75 SEK");
+        }
+
+        [TestMethod] // Clicks the reset button multiple times.
+        public void VerifyMultipleResetClicks()
+        {
+            Trace.WriteLine(window.Title);
+
+            ClickResetButton(3);
+            VerifyReset();
+        }
+
+        [TestMethod] // Adds a diverse set of items to the order and then resets the order.
+        public void VerifyDiverseOrder()
+        {
+            Trace.WriteLine(window.Title);
+
+            ClickButton("plus1Latte", 1);
+            ClickButton("plus1Americano", 1);
+            ClickButton("plus1FlatWhite", 1);
+            VerifyOrder(new string[] { "1 | Latte", "1 | Americano", "1 | Flat White" }, "Total Price: 60 SEK");
+
+            ClickResetButton(1);
+            VerifyReset();
         }
     }
 }
