@@ -50,9 +50,9 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Margin="5px" x:Name="TotalPriceTextBlock" Text="Total Price: 0 SEK" FontSize="16" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="0" Margin="5px" x:Name="totalPriceTextBlock" Text="Total Price: 0 SEK" FontSize="16" VerticalAlignment="Center" />
                     <!-- <Button Grid.Column="1" Margin="5px 10px 5px 5px" Content="Pay" FontSize="16" Name="PayButton" Click="PayButton_Click"/> -->
-                    <Button Grid.Column="2" Margin="5px 10px 5px 5px" Content="Reset" FontSize="16" Name="ResetButton" Click="ResetButton_Click"/>
+                    <Button Grid.Column="2" Margin="5px 10px 5px 5px" Content="Reset" FontSize="16" Name="resetButton" Click="resetButton_Click"/>
                 </Grid>
             </Grid>
         </Grid>

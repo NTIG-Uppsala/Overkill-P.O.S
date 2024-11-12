@@ -128,7 +128,7 @@ namespace PointOfSaleSystem
             }
 
             // Update the total price text block
-            TotalPriceTextBlock.Text = $"Total Price: {totalPrice} SEK";
+            totalPriceTextBlock.Text = $"Total Price: {totalPrice} SEK";
         }
 
         private void UpdateCustomerOrderListBox()
@@ -141,7 +141,7 @@ namespace PointOfSaleSystem
         }
 
         //Method to handle reset button click
-        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        private void resetButton_Click(object sender, RoutedEventArgs e)
         {
             // Clear the product list
             customerOrder.Clear();
@@ -153,7 +153,7 @@ namespace PointOfSaleSystem
             customerOrderListBox.Items.Clear();
 
             // Update the total price text block
-            TotalPriceTextBlock.Text = "Total Price: 0 SEK";
+            totalPriceTextBlock.Text = "Total Price: 0 SEK";
         }
     }
 }
