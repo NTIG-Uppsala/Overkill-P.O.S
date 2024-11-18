@@ -44,7 +44,7 @@ namespace TestSystem
         // Clicks the reset button a given number of times.
         private void ClickResetButton(int count)
         {
-            var resetButton = window.FindFirstDescendant(cf.ByAutomationId("ResetButton"))?.AsButton();
+            var resetButton = window.FindFirstDescendant(cf.ByAutomationId("resetButton"))?.AsButton();
             for (int i = 0; i < count; i++)
             {
                 resetButton.Click();
@@ -54,27 +54,27 @@ namespace TestSystem
         // Verifies that the order list and total price match the expected values.
         private void VerifyOrder(string[] expectedOrderTexts, string expectedTotalPrice)
         {
-            var testCustomerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
-            var testTotalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("TotalPriceTextBlock"))?.AsLabel();
+            var customerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
+            var totalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("totalPriceTextBlock"))?.AsLabel();
 
-            Assert.AreEqual(expectedOrderTexts.Length, testCustomerOrderListBox.Items.Length);
+            Assert.AreEqual(expectedOrderTexts.Length, customerOrderListBox.Items.Length);
 
             for (int i = 0; i < expectedOrderTexts.Length; i++)
             {
-                Assert.AreEqual(expectedOrderTexts[i], testCustomerOrderListBox.Items[i].Text);
+                Assert.AreEqual(expectedOrderTexts[i], customerOrderListBox.Items[i].Text);
             }
 
-            Assert.AreEqual(expectedTotalPrice, testTotalPriceTextBlock.Text);
+            Assert.AreEqual(expectedTotalPrice, totalPriceTextBlock.Text);
         }
 
         // Verifies that the order list is empty and the total price is reset.
         private void VerifyReset()
         {
-            var testCustomerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
-            var testTotalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("TotalPriceTextBlock"))?.AsLabel();
+            var customerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
+            var totalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("totalPriceTextBlock"))?.AsLabel();
 
-            Assert.AreEqual(0, testCustomerOrderListBox.Items.Length);
-            Assert.AreEqual("Total Price: 0 SEK", testTotalPriceTextBlock.Text);
+            Assert.AreEqual(0, customerOrderListBox.Items.Length);
+            Assert.AreEqual("Total Price: 0 SEK", totalPriceTextBlock.Text);
         }
 
         [TestMethod] // Adds one espresso to the order.
