@@ -74,7 +74,7 @@ namespace PointOfSaleSystem
                 {
                     Content = $"+1 {products[i].Name}",
                     Margin = new Thickness(5),
-                    FontSize = 16,
+                    FontSize = 13,
                     Background = new SolidColorBrush(Colors.LightGray),
                     Foreground = new SolidColorBrush(Colors.Black),
                     Tag = products[i]
