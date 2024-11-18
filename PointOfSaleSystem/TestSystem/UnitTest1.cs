@@ -9,6 +9,9 @@ namespace TestSystem
     [TestClass] // While running the tests, DO NOT move the mouse and/or interact with your computer.
     public class UnitTest1
     {
+
+        // ========== TEST SETUP ======================================================
+
         private static string appPath = @"..\..\..\..\PointOfSaleSystem\bin\Debug\net8.0-windows\PointOfSaleSystem.exe";
         private Application app;
         private UIA3Automation automation;
@@ -31,6 +34,10 @@ namespace TestSystem
             app.Close();
         }
 
+        // ============================================================================
+
+        // ========== HELPER METHODS ==================================================
+
         // Clicks a button with the specified automation ID a given number of times.
         private void ClickButton(string automationId, int count)
         {
@@ -38,16 +45,6 @@ namespace TestSystem
             for (int i = 0; i < count; i++)
             {
                 button.Click();
-            }
-        }
-
-        // Clicks the reset button a given number of times.
-        private void ClickResetButton(int count)
-        {
-            var resetButton = window.FindFirstDescendant(cf.ByAutomationId("resetButton"))?.AsButton();
-            for (int i = 0; i < count; i++)
-            {
-                resetButton.Click();
             }
         }
 
@@ -77,36 +74,35 @@ namespace TestSystem
             Assert.AreEqual("Total Price: 0 SEK", totalPriceTextBlock.Text);
         }
 
+        // ============================================================================
+
+        // ========== TEST METHODS ====================================================
+
         [TestMethod] // Adds one espresso to the order.
         public void VerifyEspressoOrder()
         {
-            Trace.WriteLine(window.Title);
-
             ClickButton("plus1Espresso", 1);
+
             VerifyOrder(new string[] { "1 | Espresso" }, "Total Price: 32 SEK");
         }
 
         [TestMethod] // Adds two teas to the order and then resets the order.
         public void VerifyTeaResetOrder()
         {
-            Trace.WriteLine(window.Title);
-
             ClickButton("plus1Tea", 2);
+
             VerifyOrder(new string[] { "2 | Tea" }, "Total Price: 50 SEK");
 
-            ClickResetButton(1);
+            ClickButton("resetButton", 1);
+
             VerifyReset();
         }
 
         [TestMethod] // Adds one mocha to the order, resets the order, and then adds three macchiatos.
         public void VerifyMochaResetMacchiatoOrder()
         {
-            Trace.WriteLine(window.Title);
-
             ClickButton("plus1Mocha", 1);
-
-            ClickResetButton(1);
-
+            ClickButton("resetButton", 1);
             ClickButton("plus1Macchiato", 3);
 
             VerifyOrder(new string[] { "3 | Macchiato" }, "Total Price: 75 SEK");
@@ -115,24 +111,22 @@ namespace TestSystem
         [TestMethod] // Clicks the reset button multiple times.
         public void VerifyMultipleResetClicks()
         {
-            Trace.WriteLine(window.Title);
+            ClickButton("resetButton", 3);
 
-            ClickResetButton(3);
             VerifyReset();
         }
 
         [TestMethod] // Adds a diverse set of items to the order and then resets the order.
         public void VerifyDiverseOrder()
         {
-            Trace.WriteLine(window.Title);
-
             ClickButton("plus1Latte", 1);
             ClickButton("plus1Americano", 1);
             ClickButton("plus1FlatWhite", 1);
-            VerifyOrder(new string[] { "1 | Latte", "1 | Americano", "1 | Flat White" }, "Total Price: 60 SEK");
 
-            ClickResetButton(1);
-            VerifyReset();
+            VerifyOrder(new string[] { "1 | Latte", "1 | Americano", "1 | Flat White" }, "Total Price: 60 SEK");
         }
+
+        // ============================================================================
+
     }
 }
