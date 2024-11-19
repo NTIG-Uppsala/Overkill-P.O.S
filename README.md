@@ -1,13 +1,17 @@
 # Overkill-POS
 This is a point of sale system for a café.
 
-## Download and run the application 
+## Download and Run the Application 
 [Click here to download the application](https://github.com/NTIG-Uppsala/Overkill-P.O.S/releases)
-- Navigate to the latest release -> Assets.
-- Download the Overkill.P.O.S.msi file.
-- Run the installer from where it was downloaded. (You will most likely find it in file explorer under **Downloads**.)
-- Follow the steps in the installer and allow admin privileges if asked to.
-- Once the installer is completed the application should open automatically. If not, manually open the PointOfSaleSystem.exe file that you installed. 
+1. Navigate to the ```latest release > Assets```.
+2. Download the ```Overkill.P.O.S.msi``` file.
+3. Run the installer from where it was downloaded. (You will most likely find it in file explorer under **Downloads**.)
+4. Follow the steps in the installer and allow admin privileges if asked to.
+5. Once the installer is completed the application should open automatically. If not, manually open the ```PointOfSaleSystem.exe``` file that you installed.
+
+## Create an Installer
+This guide provides step-by-step instructions for creating an installer for your WPF application using Advanced Installer and Visual Studio.
+[Advanced Installer Guide](https://github.com/NTIG-Uppsala/Overkill-P.O.S/blob/main/AdvancedInstaller.md)
 
 ## Running tests within the application
 - Navigate to the "Test" dropdown at the top of the application in Visual Studio 2022. 
