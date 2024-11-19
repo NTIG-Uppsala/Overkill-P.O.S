@@ -81,7 +81,7 @@ namespace TestSystem
         [TestMethod] // Adds one espresso to the order.
         public void VerifyEspressoOrder()
         {
-            ClickButton("plus1Espresso", 1);
+            ClickButton("Espresso", 1);
 
             VerifyOrder(new string[] { "1 | Espresso" }, "Total Price: 32 SEK");
         }
@@ -89,7 +89,7 @@ namespace TestSystem
         [TestMethod] // Adds two teas to the order and then resets the order.
         public void VerifyTeaResetOrder()
         {
-            ClickButton("plus1Tea", 2);
+            ClickButton("Tea", 2);
 
             VerifyOrder(new string[] { "2 | Tea" }, "Total Price: 50 SEK");
 
@@ -101,9 +101,9 @@ namespace TestSystem
         [TestMethod] // Adds one mocha to the order, resets the order, and then adds three macchiatos.
         public void VerifyMochaResetMacchiatoOrder()
         {
-            ClickButton("plus1Mocha", 1);
+            ClickButton("Mocha", 1);
             ClickButton("resetButton", 1);
-            ClickButton("plus1Macchiato", 3);
+            ClickButton("Macchiato", 3);
 
             VerifyOrder(new string[] { "3 | Macchiato" }, "Total Price: 75 SEK");
         }
@@ -119,9 +119,9 @@ namespace TestSystem
         [TestMethod] // Adds a diverse set of items to the order and then resets the order.
         public void VerifyDiverseOrder()
         {
-            ClickButton("plus1Latte", 1);
-            ClickButton("plus1Americano", 1);
-            ClickButton("plus1FlatWhite", 1);
+            ClickButton("Latte", 1);
+            ClickButton("Americano", 1);
+            ClickButton("FlatWhite", 1);
 
             VerifyOrder(new string[] { "1 | Latte", "1 | Americano", "1 | Flat White" }, "Total Price: 60 SEK");
         }

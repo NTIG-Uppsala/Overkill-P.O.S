@@ -13,9 +13,6 @@ using System.Windows.Shapes;
 
 namespace PointOfSaleSystem
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private List<Product> customerOrder = new List<Product>();
@@ -72,16 +69,16 @@ namespace PointOfSaleSystem
                 // Create a new button for each product
                 Button productButton = new Button
                 {
-                    Content = $"+1 {products[i].Name}",
+                    Content = products[i].Name,
                     Margin = new Thickness(5),
-                    FontSize = 13,
+                    FontSize = 14,
                     Background = new SolidColorBrush(Colors.LightGray),
                     Foreground = new SolidColorBrush(Colors.Black),
                     Tag = products[i]
                 };
 
                 // Set AutomationId based on product name to match test cases
-                productButton.SetValue(AutomationProperties.AutomationIdProperty, $"plus1{products[i].Name.Replace(" ", "")}");
+                productButton.SetValue(AutomationProperties.AutomationIdProperty, products[i].Name.Replace(" ", ""));
 
                 // Attach click event handler
                 productButton.Click += ProductButton_Click;
