@@ -37,19 +37,20 @@ namespace PointOfSaleSystem
         }
 
 
-        //List of products
+        // List of products ordered by popularity
         private readonly List<Product> products = new List<Product>
         {
-            new Product("Tea", 25.0),
+            new Product("Espresso", 32.0),
             new Product("Latte", 20.0),
-            new Product("Americano", 18.0),
             new Product("Cappuccino", 30.0),
+            new Product("Americano", 18.0),
             new Product("Mocha", 35.0),
-            new Product("Hot Chocolate", 28.0),
-            new Product("Macchiato", 25.0),
             new Product("Flat White", 22.0),
-            new Product("Espresso", 32.0)
+            new Product("Macchiato", 25.0),
+            new Product("Tea", 25.0),
+            new Product("Hot Chocolate", 28.0)
         };
+
 
         //Constructor
         public MainWindow()
