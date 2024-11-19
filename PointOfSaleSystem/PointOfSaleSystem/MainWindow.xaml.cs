@@ -17,14 +17,16 @@ namespace PointOfSaleSystem
     {
         private List<Product> customerOrder = new List<Product>();
 
-        // The total price of the order
         private double totalPrice = 0;
 
+        // ========== PRODUCT CLASS ==================================================
+
+        // Represents a product with a name, price, and quantity
         public class Product
         {
             public string Name { get; set; }
             public double Price { get; set; }
-            public int Quantity { get; set; }  // New property to track quantity
+            public int Quantity { get; set; }
 
             public Product(string name, double price, int quantity = 1)
             {
@@ -33,11 +35,14 @@ namespace PointOfSaleSystem
                 Quantity = quantity;
             }
 
-            public double TotalPrice => Price * Quantity; // Helper property for total cost of this item
+            public double TotalPrice => Price * Quantity;
         }
 
+        // ============================================================================
 
-        // List of products ordered by popularity
+        // ========== PRODUCT LIST ====================================================
+
+        // List of products ordered.
         private readonly List<Product> products = new List<Product>
         {
             new Product("Espresso", 32.0),
@@ -51,23 +56,17 @@ namespace PointOfSaleSystem
             new Product("Hot Chocolate", 28.0)
         };
 
+        // ============================================================================
 
-        //Constructor
-        public MainWindow()
-        {
-            InitializeComponent();
-            CreateProductButtons();
-        }
+        // ========== HELPER METHODS ==================================================
 
-        //Method to create product buttons
+        // Creates product buttons dynamically.
         private void CreateProductButtons()
         {
-            ButtonGrid.Children.Clear(); // Clear any existing buttons
+            ButtonGrid.Children.Clear();
 
-            // Loop through products and create buttons
             for (int i = 0; i < products.Count; i++)
             {
-                // Create a new button for each product
                 Button productButton = new Button
                 {
                     Content = products[i].Name,
@@ -78,13 +77,11 @@ namespace PointOfSaleSystem
                     Tag = products[i]
                 };
 
-                // Set AutomationId based on product name to match test cases
                 productButton.SetValue(AutomationProperties.AutomationIdProperty, products[i].Name.Replace(" ", ""));
 
-                // Attach click event handler
                 productButton.Click += ProductButton_Click;
 
-                // Position in 3x3 grid
+                // Position in 3x3 grid layout. Filled from left to right => top to bottom.
                 int row = i / 3;
                 int column = i % 3;
 
@@ -94,41 +91,40 @@ namespace PointOfSaleSystem
             }
         }
 
-        //Method to handle product button click
+        // Handles product button click events.
         private void ProductButton_Click(object sender, RoutedEventArgs e)
         {
-            // Cast the sender as Button to get the product info from the Tag
+            // Cast the sender as Button to get the product info from the Tag.
             Button productButton = sender as Button;
             Product clickedProduct = productButton.Tag as Product;
 
-            // Check if the product is already in the customer order
+            // Check if the product is already in the customer order.
             Product existingProduct = customerOrder.Find(p => p.Name == clickedProduct.Name);
             if (existingProduct != null)
             {
-                // If it exists, increase the quantity
+                // If it exists, increase the quantity.
                 existingProduct.Quantity++;
             }
             else
             {
-                // If it doesn't exist, add a new entry
+                // If it doesn't exist, add a new entry.
                 Product newProduct = new Product(clickedProduct.Name, clickedProduct.Price);
                 customerOrder.Add(newProduct);
             }
 
-            // Update the total price
+            // Update the total price.
             totalPrice += clickedProduct.Price;
 
-            // Refresh the ListBox display to show the updated order
+            // Refresh the ListBox display to show the updated order.
             customerOrderListBox.Items.Clear();
             foreach (var product in customerOrder)
             {
                 customerOrderListBox.Items.Add($"{product.Quantity} | {product.Name}");
             }
-
-            // Update the total price text block
             totalPriceTextBlock.Text = $"Total Price: {totalPrice} SEK";
         }
 
+        // Updates the customer order ListBox.
         private void UpdateCustomerOrderListBox()
         {
             customerOrderListBox.Items.Clear();
@@ -138,20 +134,26 @@ namespace PointOfSaleSystem
             }
         }
 
-        //Method to handle reset button click
+        // Handles reset button click events.
         private void resetButton_Click(object sender, RoutedEventArgs e)
         {
-            // Clear the product list
             customerOrder.Clear();
-
-            // Reset the total price
             totalPrice = 0;
-
-            // Clear the ListBox to reflect the reset state
             customerOrderListBox.Items.Clear();
-
-            // Update the total price text block
             totalPriceTextBlock.Text = "Total Price: 0 SEK";
         }
+
+        // ============================================================================
+
+        // ========== CONSTRUCTOR =====================================================
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            CreateProductButtons();
+        }
+
+        // ============================================================================
+
     }
 }
