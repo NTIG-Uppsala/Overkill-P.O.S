@@ -138,6 +138,32 @@ namespace PointOfSaleSystem
             }
         }
 
+        //Method to handle pay button click
+        private void payButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (customerOrder.Count == 0)
+            {
+                // Display message if no items are selected
+                MessageBox.Show("You don't have any items selected", "Payment Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Clear the product list
+            customerOrder.Clear();
+
+            // Reset the total price
+            totalPrice = 0;
+
+            // Clear the ListBox to reflect the reset state
+            customerOrderListBox.Items.Clear();
+
+            // Update the total price text block
+            totalPriceTextBlock.Text = "Total Price: 0 SEK";
+
+            // Display payment confirmation message
+            MessageBox.Show("Payment confirmed", "Payment", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
         //Method to handle reset button click
         private void resetButton_Click(object sender, RoutedEventArgs e)
         {
