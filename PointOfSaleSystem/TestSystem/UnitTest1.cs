@@ -74,6 +74,20 @@ namespace TestSystem
             Assert.AreEqual("Total Price: 0 SEK", totalPriceTextBlock.Text);
         }
 
+        // Gets the text of the message box.
+        private string GetMessageBoxText()
+        {
+            var messageBox = window.ModalWindows.FirstOrDefault();
+            return messageBox?.FindFirstDescendant(cf.ByControlType(FlaUI.Core.Definitions.ControlType.Text))?.AsLabel().Text;
+        }
+
+        // Closes the message box.
+        private void CloseMessageBox()
+        {
+            var messageBox = window.ModalWindows.FirstOrDefault();
+            messageBox?.FindFirstDescendant(cf.ByControlType(FlaUI.Core.Definitions.ControlType.Button))?.AsButton().Click();
+        }
+
         // ============================================================================
 
         // ========== TEST METHODS ====================================================
@@ -124,6 +138,43 @@ namespace TestSystem
             ClickButton("FlatWhite", 1);
 
             VerifyOrder(new string[] { "1 | Latte", "1 | Americano", "1 | Flat White" }, "Total Price: 60 SEK");
+        }
+
+        [TestMethod] // Clicks the pay button without any items and verifies the error message.
+        public void VerifyPayWithoutItems()
+        {
+            ClickButton("payButton", 1);
+
+            Assert.AreEqual("You don't have any items selected", GetMessageBoxText());
+            CloseMessageBox();
+        }
+
+        [TestMethod] // Adds items to the order and verifies the payment confirmation message.
+        public void VerifyPayWithItems()
+        {
+            ClickButton("Latte", 1);
+            ClickButton("Americano", 1);
+
+            ClickButton("payButton", 1);
+
+            Assert.AreEqual("Payment confirmed", GetMessageBoxText());
+            CloseMessageBox();
+
+            VerifyReset();
+        }
+
+        [TestMethod] // Adds multiple items, pays, and verifies the order list is reset and payment confirmation message.
+        public void VerifyMultipleItemsPay()
+        {
+            ClickButton("Espresso", 2);
+            ClickButton("Mocha", 1);
+
+            ClickButton("payButton", 1);
+
+            Assert.AreEqual("Payment confirmed", GetMessageBoxText());
+            CloseMessageBox();
+
+            VerifyReset();
         }
 
         // ============================================================================
