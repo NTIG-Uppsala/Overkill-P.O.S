@@ -12,7 +12,7 @@ namespace TestSystem
 
         // ========== TEST SETUP ======================================================
 
-        private static string appPath = @"..\..\..\..\PointOfSaleSystem\bin\Debug\net8.0-windows\PointOfSaleSystem.exe";
+        private static string appPath = @"..\..\..\..\PointOfSaleSystem\bin\Release\net8.0-windows\PointOfSaleSystem.exe";
         private Application app;
         private UIA3Automation automation;
         private Window window;
@@ -97,7 +97,7 @@ namespace TestSystem
         {
             ClickButton("Espresso", 1);
 
-            VerifyOrder(new string[] { "1 | Espresso" }, "Total Price: 32 SEK");
+            VerifyOrder(new string[] { "1 | Espresso" }, "Total Price: 32,00 SEK");
         }
 
         [TestMethod] // Adds two teas to the order and then resets the order.
@@ -105,7 +105,7 @@ namespace TestSystem
         {
             ClickButton("Tea", 2);
 
-            VerifyOrder(new string[] { "2 | Tea" }, "Total Price: 50 SEK");
+            VerifyOrder(new string[] { "2 | Tea" }, "Total Price: 51,98 SEK");
 
             ClickButton("resetButton", 1);
 
@@ -119,7 +119,7 @@ namespace TestSystem
             ClickButton("resetButton", 1);
             ClickButton("Macchiato", 3);
 
-            VerifyOrder(new string[] { "3 | Macchiato" }, "Total Price: 75 SEK");
+            VerifyOrder(new string[] { "3 | Macchiato" }, "Total Price: 77,25 SEK");
         }
 
         [TestMethod] // Clicks the reset button multiple times.
@@ -137,7 +137,7 @@ namespace TestSystem
             ClickButton("Americano", 1);
             ClickButton("FlatWhite", 1);
 
-            VerifyOrder(new string[] { "1 | Latte", "1 | Americano", "1 | Flat White" }, "Total Price: 60 SEK");
+            VerifyOrder(new string[] { "1 | Latte", "1 | Americano", "1 | Flat White" }, "Total Price: 61,58 SEK");
         }
 
         [TestMethod] // Clicks the pay button without any items and verifies the error message.

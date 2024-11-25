@@ -17,7 +17,7 @@ namespace PointOfSaleSystem
     {
         private List<Product> customerOrder = new List<Product>();
 
-        private double totalPrice = 0;
+        private decimal totalPrice = 0;
 
         // ========== PRODUCT CLASS ==================================================
 
@@ -25,17 +25,17 @@ namespace PointOfSaleSystem
         public class Product
         {
             public string Name { get; set; }
-            public double Price { get; set; }
+            public decimal Price { get; set; }
             public int Quantity { get; set; }
 
-            public Product(string name, double price, int quantity = 1)
+            public Product(string name, decimal price, int quantity = 1)
             {
                 Name = name;
                 Price = price;
                 Quantity = quantity;
             }
 
-            public double TotalPrice => Price * Quantity;
+            public decimal TotalPrice => Price * Quantity;
         }
 
         // ============================================================================
@@ -45,15 +45,15 @@ namespace PointOfSaleSystem
         // List of products ordered.
         private readonly List<Product> products = new List<Product>
         {
-            new Product("Espresso", 32.0),
-            new Product("Latte", 20.0),
-            new Product("Cappuccino", 30.0),
-            new Product("Americano", 18.0),
-            new Product("Mocha", 35.0),
-            new Product("Flat White", 22.0),
-            new Product("Macchiato", 25.0),
-            new Product("Tea", 25.0),
-            new Product("Hot Chocolate", 28.0)
+            new Product("Espresso", 32.0m),
+            new Product("Latte", 20.33m),
+            new Product("Cappuccino", 30.33m),
+            new Product("Americano", 18.50m),
+            new Product("Mocha", 35.50m),
+            new Product("Flat White", 22.75m),
+            new Product("Macchiato", 25.75m),
+            new Product("Tea", 25.99m),
+            new Product("Hot Chocolate", 28.99m)
         };
 
         // ============================================================================
@@ -121,7 +121,7 @@ namespace PointOfSaleSystem
             {
                 customerOrderListBox.Items.Add($"{product.Quantity} | {product.Name}");
             }
-            totalPriceTextBlock.Text = $"Total Price: {totalPrice} SEK";
+            totalPriceTextBlock.Text = $"Total Price: {String.Format("{0:0.00}", totalPrice)} SEK";
         }
 
         // Updates the customer order ListBox.
