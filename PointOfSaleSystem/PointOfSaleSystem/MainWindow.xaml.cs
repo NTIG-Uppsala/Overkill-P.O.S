@@ -1,32 +1,23 @@
 ﻿using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PointOfSaleSystem
 {
     public partial class MainWindow : Window
     {
-        private List<Product> customerOrder = new List<Product>();
-
+        private readonly List<Product> customerOrder = new List<Product>();
         private decimal totalPrice = 0;
-
-        // ========== PRODUCT CLASS ==================================================
 
         // Represents a product with a name, price, and quantity
         public class Product
         {
-            public string Name { get; set; }
-            public decimal Price { get; set; }
-            public int Quantity { get; set; }
+            public string Name { get; }
+            public decimal Price { get; }
+            public int Quantity { get; private set; }
 
             public Product(string name, decimal price, int quantity = 1)
             {
@@ -36,52 +27,50 @@ namespace PointOfSaleSystem
             }
 
             public decimal TotalPrice => Price * Quantity;
+
+            public void IncrementQuantity() => Quantity++;
         }
 
-        // ============================================================================
-
-        // ========== PRODUCT LIST ====================================================
-
-        // List of products ordered.
-        private readonly List<Product> products = new List<Product>
+        private readonly List<Product> products = new()
         {
-            new Product("Espresso", 32.0m),
-            new Product("Latte", 20.33m),
-            new Product("Cappuccino", 30.33m),
-            new Product("Americano", 18.50m),
-            new Product("Mocha", 35.50m),
-            new Product("Flat White", 22.75m),
-            new Product("Macchiato", 25.75m),
-            new Product("Tea", 25.99m),
-            new Product("Hot Chocolate", 28.99m)
+            new("Espresso", 32.0m),
+            new("Latte", 20.33m),
+            new("Cappuccino", 30.33m),
+            new("Americano", 18.50m),
+            new("Mocha", 35.50m),
+            new("Flat White", 22.75m),
+            new("Macchiato", 25.75m),
+            new("Tea", 25.99m),
+            new("Hot Chocolate", 28.99m)
         };
 
-        // ============================================================================
+        public MainWindow()
+        {
+            InitializeComponent();
+            CreateProductButtons();
+        }
 
-        // ========== HELPER METHODS ==================================================
-
-        // Creates product buttons dynamically.
         private void CreateProductButtons()
         {
             ButtonGrid.Children.Clear();
 
             for (int i = 0; i < products.Count; i++)
             {
-                Button productButton = new Button
+                var product = products[i];
+                var productButton = new Button
                 {
-                    Content = products[i].Name,
+                    Content = product.Name,
                     Margin = new Thickness(5),
                     FontSize = 14,
                     Background = new SolidColorBrush(Colors.LightGray),
                     Foreground = new SolidColorBrush(Colors.Black),
-                    Tag = products[i]
+                    Tag = product
                 };
 
-                productButton.SetValue(AutomationProperties.AutomationIdProperty, products[i].Name.Replace(" ", ""));
-
+                productButton.SetValue(AutomationProperties.AutomationIdProperty, product.Name.Replace(" ", ""));
                 productButton.Click += ProductButton_Click;
 
-                // Position in 3x3 grid layout. Filled from left to right => top to bottom.
+                // Position in a 3x3 grid layout
                 int row = i / 3;
                 int column = i % 3;
 
@@ -91,95 +80,63 @@ namespace PointOfSaleSystem
             }
         }
 
-        // Handles product button click events.
         private void ProductButton_Click(object sender, RoutedEventArgs e)
         {
-            // Cast the sender as Button to get the product info from the Tag.
-            Button productButton = sender as Button;
-            Product clickedProduct = productButton.Tag as Product;
+            if (sender is not Button productButton || productButton.Tag is not Product clickedProduct)
+                return;
 
-            // Check if the product is already in the customer order.
-            Product existingProduct = customerOrder.Find(p => p.Name == clickedProduct.Name);
+            var existingProduct = customerOrder.FirstOrDefault(p => p.Name == clickedProduct.Name);
             if (existingProduct != null)
             {
-                // If it exists, increase the quantity.
-                existingProduct.Quantity++;
+                existingProduct.IncrementQuantity();
             }
             else
             {
-                // If it doesn't exist, add a new entry.
-                Product newProduct = new Product(clickedProduct.Name, clickedProduct.Price);
-                customerOrder.Add(newProduct);
+                customerOrder.Add(new Product(clickedProduct.Name, clickedProduct.Price));
             }
 
-            // Update the total price.
             totalPrice += clickedProduct.Price;
 
-            // Refresh the ListBox display to show the updated order.
+            UpdateOrderDisplay();
+        }
+
+        private void UpdateOrderDisplay()
+        {
             customerOrderListBox.Items.Clear();
             foreach (var product in customerOrder)
             {
                 customerOrderListBox.Items.Add($"{product.Quantity} | {product.Name}");
             }
-            totalPriceTextBlock.Text = $"Total Price: {String.Format("{0:0.00}", totalPrice)} SEK";
+            totalPriceTextBlock.Text = $"Total Price: {totalPrice:0.00} SEK";
         }
 
-        // Updates the customer order ListBox.
-        private void UpdateCustomerOrderListBox()
-        {
-            customerOrderListBox.Items.Clear();
-            foreach (var item in customerOrderListBox.Items)
-            {
-                customerOrderListBox.Items.Add(item);
-            }
-        }
-
-        //Method to handle pay button click
         private void payButton_Click(object sender, RoutedEventArgs e)
         {
             if (customerOrder.Count == 0)
             {
-                // Display message if no items are selected
-                MessageBox.Show("You don't have any items selected", "Payment Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ShowMessage("You don't have any items selected", "Payment Error", MessageBoxImage.Warning);
                 return;
             }
 
-            // Clear the product list
-            customerOrder.Clear();
-
-            // Reset the total price
-            totalPrice = 0;
-
-            // Clear the ListBox to reflect the reset state
-            customerOrderListBox.Items.Clear();
-
-            // Update the total price text block
-            totalPriceTextBlock.Text = "Total Price: 0 SEK";
-
-            // Display payment confirmation message
-            MessageBox.Show("Payment confirmed", "Payment", MessageBoxButton.OK, MessageBoxImage.Information);
+            ResetOrder();
+            ShowMessage("Payment confirmed", "Payment", MessageBoxImage.Information);
         }
 
-        // Handles reset button click events.
         private void resetButton_Click(object sender, RoutedEventArgs e)
         {
+            ResetOrder();
+        }
+
+        private void ResetOrder()
+        {
             customerOrder.Clear();
             totalPrice = 0;
-            customerOrderListBox.Items.Clear();
-            totalPriceTextBlock.Text = "Total Price: 0 SEK";
+            UpdateOrderDisplay();
         }
 
-        // ============================================================================
-
-        // ========== CONSTRUCTOR =====================================================
-
-        public MainWindow()
+        private static void ShowMessage(string message, string title, MessageBoxImage icon)
         {
-            InitializeComponent();
-            CreateProductButtons();
+            MessageBox.Show(message, title, MessageBoxButton.OK, icon);
         }
-
-        // ============================================================================
-
     }
 }
