@@ -40,11 +40,13 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="5*"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" Text="Customer Order" FontSize="24" HorizontalAlignment="Center"/>
                 <ListBox Grid.Row="1" FontSize="16" Name="customerOrderListBox" AutomationProperties.AutomationId="customerOrderListBox"/>
-                <Grid Grid.Row="2">
+                <Button Grid.Row="2" Margin="5px 10px 5px 5px" Content="Show purchase history" FontSize="16" Name="historyButton" Click="historyButton_Click"/>
+                <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="1*"/>

@@ -71,7 +71,7 @@ namespace TestSystem
             var totalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("totalPriceTextBlock"))?.AsLabel();
 
             Assert.AreEqual(0, customerOrderListBox.Items.Length);
-            Assert.AreEqual("Total Price: 0 SEK", totalPriceTextBlock.Text);
+            Assert.AreEqual("Total Price: 0,00 SEK", totalPriceTextBlock.Text);
         }
 
         // Gets the text of the message box.
@@ -176,6 +176,46 @@ namespace TestSystem
 
             VerifyReset();
         }
+
+        [TestMethod] // Adds three different products, pays for them, and verifies the purchase history.
+        public void VerifyMultipleProductsPurchaseHistory()
+        {
+            ClickButton("Espresso", 1);
+            ClickButton("Latte", 1);
+            ClickButton("Mocha", 1);
+
+            ClickButton("payButton", 1);
+
+            Assert.AreEqual("Payment confirmed", GetMessageBoxText());
+            CloseMessageBox();
+
+            ClickButton("historyButton", 1);
+
+            Assert.AreEqual("1 | Espresso\n1 | Latte\n1 | Mocha", GetMessageBoxText());
+            CloseMessageBox();
+        }
+
+        [TestMethod] // Opens the purchase history without paying for any products and verifies it is empty.
+        public void VerifyEmptyPurchaseHistory()
+        {
+            ClickButton("historyButton", 1);
+
+            Assert.AreEqual("No purchase history available.", GetMessageBoxText());
+            CloseMessageBox();
+        }
+
+        [TestMethod] // Adds products to the list but does not pay for them, then checks the history.
+        public void VerifyPurchaseHistoryWithoutPayment()
+        {
+            ClickButton("Latte", 1);
+            ClickButton("Americano", 1);
+
+            ClickButton("historyButton", 1);
+
+            Assert.AreEqual("No purchase history available.", GetMessageBoxText());
+            CloseMessageBox();
+        }
+
 
         // ============================================================================
 
