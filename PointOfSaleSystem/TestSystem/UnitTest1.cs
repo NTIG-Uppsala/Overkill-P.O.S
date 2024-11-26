@@ -49,29 +49,43 @@ namespace TestSystem
         }
 
         // Verifies that the order list and total price match the expected values.
-        private void VerifyOrder(string[] expectedOrderTexts, string expectedTotalPrice)
+        private void VerifyOrder(string[] expectedQuantities, string[] expectedNames, string expectedTotalPrice)
         {
-            var customerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
+            var customerOrderListView = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListView"))?.AsListBox();
             var totalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("totalPriceTextBlock"))?.AsLabel();
 
-            Assert.AreEqual(expectedOrderTexts.Length, customerOrderListBox.Items.Length);
+            // Validate the number of rows
+            Assert.AreEqual(expectedQuantities.Length, customerOrderListView.Items.Length, "Mismatch in number of rows.");
 
-            for (int i = 0; i < expectedOrderTexts.Length; i++)
+            for (int i = 0; i < expectedQuantities.Length; i++)
             {
-                Assert.AreEqual(expectedOrderTexts[i], customerOrderListBox.Items[i].Text);
+                // Access the current row
+                var row = customerOrderListView.Items[i];
+
+                // Access the Quantity TextBlock
+                var quantityTextBlock = row.FindFirstDescendant(cf.ByAutomationId("QuantityText"))?.AsLabel();
+                Assert.IsNotNull(quantityTextBlock, $"Quantity TextBlock not found in row {i}.");
+                Assert.AreEqual(expectedQuantities[i], quantityTextBlock.Text, $"Mismatch in Quantity for row {i}.");
+
+                // Access the Product Name TextBlock
+                var productNameTextBlock = row.FindFirstDescendant(cf.ByAutomationId("ProductNameText"))?.AsLabel();
+                Assert.IsNotNull(productNameTextBlock, $"Product Name TextBlock not found in row {i}.");
+                Assert.AreEqual(expectedNames[i], productNameTextBlock.Text, $"Mismatch in Product Name for row {i}.");
             }
 
-            Assert.AreEqual(expectedTotalPrice, totalPriceTextBlock.Text);
+            // Validate the total price
+            Assert.AreEqual(expectedTotalPrice, totalPriceTextBlock.Text, "Mismatch in Total Price.");
         }
+
 
         // Verifies that the order list is empty and the total price is reset.
         private void VerifyReset()
         {
-            var customerOrderListBox = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListBox"))?.AsListBox();
+            var customerOrderListView = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListView"))?.AsListBox();
             var totalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("totalPriceTextBlock"))?.AsLabel();
 
-            Assert.AreEqual(0, customerOrderListBox.Items.Length);
-            Assert.AreEqual("Total Price: 0 SEK", totalPriceTextBlock.Text);
+            Assert.AreEqual(0, customerOrderListView.Items.Length);
+            Assert.AreEqual("Total Price: 0,00 SEK", totalPriceTextBlock.Text);
         }
 
         // Gets the text of the message box.
@@ -97,7 +111,11 @@ namespace TestSystem
         {
             ClickButton("Espresso", 1);
 
-            VerifyOrder(new string[] { "1 | Espresso" }, "Total Price: 32,00 SEK");
+            VerifyOrder(
+                new string[] { "1" },
+                new string[] { "Espresso" },
+                "Total Price: 32,00 SEK"
+            );
         }
 
         [TestMethod] // Adds two teas to the order and then resets the order.
@@ -105,7 +123,11 @@ namespace TestSystem
         {
             ClickButton("Tea", 2);
 
-            VerifyOrder(new string[] { "2 | Tea" }, "Total Price: 51,98 SEK");
+            VerifyOrder(
+                new string[] { "2" },
+                new string[] { "Tea" },
+                "Total Price: 51,98 SEK"
+            );
 
             ClickButton("resetButton", 1);
 
@@ -119,7 +141,11 @@ namespace TestSystem
             ClickButton("resetButton", 1);
             ClickButton("Macchiato", 3);
 
-            VerifyOrder(new string[] { "3 | Macchiato" }, "Total Price: 77,25 SEK");
+            VerifyOrder(
+                new string[] { "3" },
+                new string[] { "Macchiato" },
+                "Total Price: 77,25 SEK"
+            );
         }
 
         [TestMethod] // Clicks the reset button multiple times.
@@ -137,7 +163,11 @@ namespace TestSystem
             ClickButton("Americano", 1);
             ClickButton("FlatWhite", 1);
 
-            VerifyOrder(new string[] { "1 | Latte", "1 | Americano", "1 | Flat White" }, "Total Price: 61,58 SEK");
+            VerifyOrder(
+                new string[] { "1", "1", "1" },
+                new string[] { "Latte", "Americano", "Flat White" },
+                "Total Price: 61,58 SEK"
+            );
         }
 
         [TestMethod] // Clicks the pay button without any items and verifies the error message.
@@ -175,6 +205,47 @@ namespace TestSystem
             CloseMessageBox();
 
             VerifyReset();
+        }
+
+        [TestMethod] // Add Hot Chocolate, increment quantity, and verify the order.
+        public void VerifyIncrementQuantity()
+        {
+            ClickButton("HotChocolate", 1);
+            ClickButton("IncrementButton", 1);
+
+            VerifyOrder(
+                new string[] { "2" },
+                new string[] { "Hot Chocolate" },
+                "Total Price: 57,98 SEK"
+            );
+        }
+
+        [TestMethod] // Add Cappuccino, increment quantity, decrement quantity, and verify the order.
+        public void VerifyIncrementDecrementQuantity()
+        {
+            ClickButton("Cappuccino", 1);
+            ClickButton("IncrementButton", 2);
+            ClickButton("DecrementButton", 1);
+
+            VerifyOrder(
+                new string[] { "2" },
+                new string[] { "Cappuccino" },
+                "Total Price: 60,66 SEK"
+                );
+        }
+
+        [TestMethod] // Add Espresso, add Cappuccino, decrement quantity of Espresso (delete), and verify the order.
+        public void VerifyDecrementDeleteQuantity()
+        {
+            ClickButton("Espresso", 1);
+            ClickButton("Cappuccino", 1);
+            ClickButton("DecrementButton", 1);
+
+            VerifyOrder(
+                new string[] { "1" },
+                new string[] { "Cappuccino" },
+                "Total Price: 30,33 SEK"
+            );
         }
 
         // ============================================================================

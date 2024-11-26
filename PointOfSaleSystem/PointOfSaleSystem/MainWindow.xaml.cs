@@ -12,7 +12,6 @@ namespace PointOfSaleSystem
         private readonly List<Product> customerOrder = new List<Product>();
         private decimal totalPrice = 0;
 
-        // Represents a product with a name, price, and quantity
         public class Product
         {
             public string Name { get; }
@@ -29,6 +28,8 @@ namespace PointOfSaleSystem
             public decimal TotalPrice => Price * Quantity;
 
             public void IncrementQuantity() => Quantity++;
+
+            public void DecrementQuantity() => Quantity--;
         }
 
         private readonly List<Product> products = new()
@@ -44,6 +45,7 @@ namespace PointOfSaleSystem
             new("Hot Chocolate", 28.99m)
         };
 
+        // ----------------- INITIALIZATION -------------------------------------------------------
         public MainWindow()
         {
             InitializeComponent();
@@ -70,7 +72,6 @@ namespace PointOfSaleSystem
                 productButton.SetValue(AutomationProperties.AutomationIdProperty, product.Name.Replace(" ", ""));
                 productButton.Click += ProductButton_Click;
 
-                // Position in a 3x3 grid layout
                 int row = i / 3;
                 int column = i % 3;
 
@@ -80,12 +81,38 @@ namespace PointOfSaleSystem
             }
         }
 
+        // ----------------- HELPER METHODS -------------------------------------------------------
+        private static void ShowMessage(string message, string title, MessageBoxImage icon)
+        {
+            MessageBox.Show(message, title, MessageBoxButton.OK, icon);
+        }
+
+        private void ResetOrder()
+        {
+            customerOrder.Clear();
+            totalPrice = 0;
+            UpdateCustomerOrderListView();
+            UpdateTotalPriceTextBlock();
+        }
+
+        private void UpdateCustomerOrderListView()
+        {
+            customerOrderListView.ItemsSource = null;
+            customerOrderListView.ItemsSource = customerOrder;
+        }
+
+        private void UpdateTotalPriceTextBlock()
+        {
+            totalPriceTextBlock.Text = $"Total Price: {totalPrice:0.00} SEK";
+        }
+
+        // ----------------- BUTTON CLICK EVENTS --------------------------------------------------
         private void ProductButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not Button productButton || productButton.Tag is not Product clickedProduct)
-                return;
+            Button productButton = sender as Button;
+            Product clickedProduct = productButton.Tag as Product;
 
-            var existingProduct = customerOrder.FirstOrDefault(p => p.Name == clickedProduct.Name);
+            Product existingProduct = customerOrder.Find(p => p.Name == clickedProduct.Name);
             if (existingProduct != null)
             {
                 existingProduct.IncrementQuantity();
@@ -97,17 +124,8 @@ namespace PointOfSaleSystem
 
             totalPrice += clickedProduct.Price;
 
-            UpdateOrderDisplay();
-        }
-
-        private void UpdateOrderDisplay()
-        {
-            customerOrderListBox.Items.Clear();
-            foreach (var product in customerOrder)
-            {
-                customerOrderListBox.Items.Add($"{product.Quantity} | {product.Name}");
-            }
-            totalPriceTextBlock.Text = $"Total Price: {totalPrice:0.00} SEK";
+            UpdateCustomerOrderListView();
+            UpdateTotalPriceTextBlock();
         }
 
         private void payButton_Click(object sender, RoutedEventArgs e)
@@ -127,16 +145,51 @@ namespace PointOfSaleSystem
             ResetOrder();
         }
 
-        private void ResetOrder()
+        private void IncrementQuantity_Click(object sender, RoutedEventArgs e)
         {
-            customerOrder.Clear();
-            totalPrice = 0;
-            UpdateOrderDisplay();
+            Button incrementButton = sender as Button;
+            Product product = incrementButton.Tag as Product;
+
+            if (product != null)
+            {
+                product.IncrementQuantity();
+                totalPrice += product.Price;
+
+                UpdateCustomerOrderListView();
+                UpdateTotalPriceTextBlock();
+            }
         }
 
-        private static void ShowMessage(string message, string title, MessageBoxImage icon)
+        private void DecrementQuantity_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(message, title, MessageBoxButton.OK, icon);
+            Button decrementButton = sender as Button;
+            Product product = decrementButton.Tag as Product;
+
+            if (product != null)
+            {
+                if (product.Quantity > 1)
+                {
+                    product.DecrementQuantity();
+                    totalPrice -= product.Price;
+                }
+                else
+                {
+                    customerOrder.Remove(product);
+                    totalPrice -= product.Price;
+                }
+
+                UpdateCustomerOrderListView();
+                UpdateTotalPriceTextBlock();
+            }
         }
+
+
+
+
+
+
+
+
+
     }
 }
