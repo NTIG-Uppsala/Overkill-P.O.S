@@ -10,6 +10,7 @@ namespace PointOfSaleSystem
     public partial class MainWindow : Window
     {
         private readonly List<Product> customerOrder = new List<Product>();
+        private readonly List<Product> purchaseHistory = new List<Product>();
         private decimal totalPrice = 0;
 
         public class Product
@@ -136,6 +137,12 @@ namespace PointOfSaleSystem
                 return;
             }
 
+            // Add purchased items to the purchase history
+            foreach (var item in customerOrder)
+            {
+                purchaseHistory.Add(new Product(item.Name, item.Price, item.Quantity));
+            }
+
             ResetOrder();
             ShowMessage("Payment confirmed", "Payment", MessageBoxImage.Information);
         }
@@ -182,14 +189,22 @@ namespace PointOfSaleSystem
                 UpdateTotalPriceTextBlock();
             }
         }
+        private void historyButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Display the purchase history
+            if (purchaseHistory.Count == 0)
+            {
+                ShowMessage("No purchase history available.", "Purchase History", MessageBoxImage.Information);
+                return;
+            }
 
+            var mergedHistory = purchaseHistory
+                .GroupBy(p => p.Name)
+                .Select(g => new { Name = g.Key, Quantity = g.Sum(p => p.Quantity) })
+                .ToList();
 
-
-
-
-
-
-
-
+            var history = string.Join("\n", mergedHistory.Select(p => $"{p.Quantity} | {p.Name}"));
+            ShowMessage(history, "Purchase History", MessageBoxImage.Information);
+        }
     }
 }
