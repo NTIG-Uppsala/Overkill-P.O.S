@@ -42,6 +42,7 @@ namespace TestSystem
         private void ClickButton(string automationId, int count)
         {
             var button = window.FindFirstDescendant(cf.ByAutomationId(automationId))?.AsButton();
+            Assert.IsNotNull(button, $"Button with AutomationId '{automationId}' not found.");
             for (int i = 0; i < count; i++)
             {
                 button.Click();
@@ -54,23 +55,26 @@ namespace TestSystem
             var customerOrderListView = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListView"))?.AsListBox();
             var totalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("totalPriceTextBlock"))?.AsLabel();
 
+            Assert.IsNotNull(customerOrderListView, "Customer order list view not found.");
+            Assert.IsNotNull(totalPriceTextBlock, "Total price text block not found.");
+
             // Validate the number of rows
             Assert.AreEqual(expectedQuantities.Length, customerOrderListView.Items.Length, "Mismatch in number of rows.");
 
             for (int i = 0; i < expectedQuantities.Length; i++)
             {
-                // Access the current row
-                var row = customerOrderListView.Items[i];
+                string expectedName = expectedNames[i];
+                string expectedQuantity = expectedQuantities[i];
 
-                // Access the Quantity TextBlock
-                var quantityTextBlock = row.FindFirstDescendant(cf.ByAutomationId("QuantityText"))?.AsLabel();
-                Assert.IsNotNull(quantityTextBlock, $"Quantity TextBlock not found in row {i}.");
-                Assert.AreEqual(expectedQuantities[i], quantityTextBlock.Text, $"Mismatch in Quantity for row {i}.");
+                // Locate the QuantityText and ProductNameText using dynamic AutomationId
+                var quantityTextBlock = window.FindFirstDescendant(cf.ByAutomationId($"QuantityText_{expectedName}"))?.AsLabel();
+                var productNameTextBlock = window.FindFirstDescendant(cf.ByAutomationId($"ProductNameText_{expectedName}"))?.AsLabel();
 
-                // Access the Product Name TextBlock
-                var productNameTextBlock = row.FindFirstDescendant(cf.ByAutomationId("ProductNameText"))?.AsLabel();
-                Assert.IsNotNull(productNameTextBlock, $"Product Name TextBlock not found in row {i}.");
-                Assert.AreEqual(expectedNames[i], productNameTextBlock.Text, $"Mismatch in Product Name for row {i}.");
+                Assert.IsNotNull(quantityTextBlock, $"Quantity TextBlock for '{expectedName}' not found.");
+                Assert.AreEqual(expectedQuantity, quantityTextBlock.Text, $"Mismatch in Quantity for '{expectedName}'.");
+
+                Assert.IsNotNull(productNameTextBlock, $"Product Name TextBlock for '{expectedName}' not found.");
+                Assert.AreEqual(expectedName, productNameTextBlock.Text, $"Mismatch in Product Name for '{expectedName}'.");
             }
 
             // Validate the total price
@@ -84,8 +88,11 @@ namespace TestSystem
             var customerOrderListView = window.FindFirstDescendant(cf.ByAutomationId("customerOrderListView"))?.AsListBox();
             var totalPriceTextBlock = window.FindFirstDescendant(cf.ByAutomationId("totalPriceTextBlock"))?.AsLabel();
 
-            Assert.AreEqual(0, customerOrderListView.Items.Length);
-            Assert.AreEqual("Total Price: 0,00 SEK", totalPriceTextBlock.Text);
+            Assert.IsNotNull(customerOrderListView, "Customer order list view not found.");
+            Assert.AreEqual(0, customerOrderListView.Items.Length, "Order list is not empty after reset.");
+
+            Assert.IsNotNull(totalPriceTextBlock, "Total price text block not found.");
+            Assert.AreEqual("Total Price: 0,00 SEK", totalPriceTextBlock.Text, "Total price not reset properly.");
         }
 
         // Gets the text of the message box.
@@ -246,26 +253,12 @@ namespace TestSystem
             CloseMessageBox();
         }
 
-
-        [TestMethod] // Add Hot Chocolate, increment quantity, and verify the order.
-        public void VerifyIncrementQuantity()
-        {
-            ClickButton("HotChocolate", 1);
-            ClickButton("IncrementButton", 1);
-
-            VerifyOrder(
-                new string[] { "2" },
-                new string[] { "Hot Chocolate" },
-                "Total Price: 57,98 SEK"
-            );
-        }
-
         [TestMethod] // Add Cappuccino, increment quantity, decrement quantity, and verify the order.
         public void VerifyIncrementDecrementQuantity()
         {
             ClickButton("Cappuccino", 1);
-            ClickButton("IncrementButton", 2);
-            ClickButton("DecrementButton", 1);
+            ClickButton("IncrementButton_Cappuccino", 2);
+            ClickButton("DecrementButton_Cappuccino", 1);
 
             VerifyOrder(
                 new string[] { "2" },
@@ -279,12 +272,26 @@ namespace TestSystem
         {
             ClickButton("Espresso", 1);
             ClickButton("Cappuccino", 1);
-            ClickButton("DecrementButton", 1);
+            ClickButton("DecrementButton_Espresso", 1);
 
             VerifyOrder(
                 new string[] { "1" },
                 new string[] { "Cappuccino" },
                 "Total Price: 30,33 SEK"
+            );
+        }
+
+        [TestMethod] // Add Espresso, add Cappuccino, decrement quantity of Cappuccino (delete), and verify the order.
+        public void VerifyDecrementDeleteQuantitySecondItem()
+        {
+            ClickButton("Espresso", 1);
+            ClickButton("Cappuccino", 1);
+            ClickButton("DecrementButton_Cappuccino", 1);
+
+            VerifyOrder(
+                new string[] { "1" },
+                new string[] { "Espresso" },
+                "Total Price: 32,00 SEK"
             );
         }
 
