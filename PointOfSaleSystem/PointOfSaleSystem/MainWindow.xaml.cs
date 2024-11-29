@@ -107,10 +107,18 @@ namespace PointOfSaleSystem
             totalPriceTextBlock.Text = $"Total Price: {totalPrice:0.00} SEK";
         }
 
-        private void ScrollToLastListViewItem()
+        private void ScrollToLastListViewItem(Product lastAddedProduct)
         {
-            customerOrderListView.SelectedIndex = customerOrderListView.Items.Count - 1;
-            customerOrderListView.ScrollIntoView(customerOrderListView.SelectedItem);
+            if (lastAddedProduct != null)
+            {
+                customerOrderListView.SelectedItem = lastAddedProduct;
+                customerOrderListView.ScrollIntoView(lastAddedProduct);
+            }
+            else
+            {
+                customerOrderListView.SelectedIndex = customerOrderListView.Items.Count - 1;
+                customerOrderListView.ScrollIntoView(customerOrderListView.SelectedItem);
+            }
         }
 
         // ----------------- BUTTON CLICK EVENTS --------------------------------------------------
@@ -133,7 +141,7 @@ namespace PointOfSaleSystem
 
             UpdateCustomerOrderListView();
             UpdateTotalPriceTextBlock();
-            ScrollToLastListViewItem();
+            ScrollToLastListViewItem(existingProduct);
         }
 
         private void payButton_Click(object sender, RoutedEventArgs e)
