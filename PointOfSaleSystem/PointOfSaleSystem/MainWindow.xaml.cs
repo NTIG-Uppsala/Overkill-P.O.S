@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
@@ -8,11 +6,48 @@ using System.Windows.Media;
 
 namespace PointOfSaleSystem
 {
+    public class MainWindowViewModel : INotifyPropertyChanged
+    {
+        private decimal _totalPrice;
+
+        public decimal TotalPrice
+        {
+            get => _totalPrice;
+            set
+            {
+                if (_totalPrice != value)
+                {
+                    _totalPrice = value;
+                    OnPropertyChanged(nameof(TotalPrice));
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
     public partial class MainWindow : Window
     {
+        private readonly MainWindowViewModel _viewModel = new MainWindowViewModel();
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            DataContext = _viewModel;
+            CreateProductButtons();
+        }
+
+        private void UpdateTotalPrice(decimal amount)
+        {
+            _viewModel.TotalPrice += amount;
+        }
+
         private readonly List<Product> customerOrder = new List<Product>();
         private readonly List<Product> purchaseHistory = new List<Product>();
-        private decimal totalPrice = 0;
 
         public class Product
         {
@@ -26,8 +61,6 @@ namespace PointOfSaleSystem
                 Price = price;
                 Quantity = quantity;
             }
-
-            public decimal TotalPrice => Price * Quantity;
 
             public void IncrementQuantity() => Quantity++;
 
@@ -51,26 +84,21 @@ namespace PointOfSaleSystem
         }
 
         private readonly List<Product> products = new()
-                {
-                    new("Espresso", 32.0m),
-                    new("Latte", 20.33m),
-                    new("Cappuccino", 30.33m),
-                    new("Americano", 18.50m),
-                    new("Mocha", 35.50m),
-                    new("Flat White", 22.75m),
-                    new("Macchiato", 25.75m),
-                    new("Tea", 25.99m),
-                    new("Hot Chocolate", 28.99m)
-                };
+        {
+            new("Espresso", 32.0m),
+            new("Latte", 20.33m),
+            new("Cappuccino", 30.33m),
+            new("Americano", 18.50m),
+            new("Mocha", 35.50m),
+            new("Flat White", 22.75m),
+            new("Macchiato", 25.75m),
+            new("Tea", 25.99m),
+            new("Hot Chocolate", 28.99m)
+        };
 
         private readonly Stack<ActionRecord> actionStack = new Stack<ActionRecord>();
 
         // ----------------- INITIALIZATION -------------------------------------------------------
-        public MainWindow()
-        {
-            InitializeComponent();
-            CreateProductButtons();
-        }
 
         private void CreateProductButtons()
         {
@@ -109,9 +137,8 @@ namespace PointOfSaleSystem
 
         private void ResetOrder()
         {
-            // Save the current state before resetting
+            var previousTotalPrice = _viewModel.TotalPrice;
             var previousOrderState = customerOrder.Select(p => new Product(p.Name, p.Price, p.Quantity)).ToList();
-            var previousTotalPrice = totalPrice;
 
             actionStack.Push(new ActionRecord
             {
@@ -121,21 +148,16 @@ namespace PointOfSaleSystem
             });
 
             customerOrder.Clear();
-            totalPrice = 0;
+            _viewModel.TotalPrice = 0;
             UpdateCustomerOrderListView();
-            UpdateTotalPriceTextBlock();
         }
+
 
         private void UpdateCustomerOrderListView()
         {
-            customerOrderListView.ItemsSource = null; // Clear the current items
-            customerOrderListView.ItemsSource = customerOrder; // Set the new items
-            customerOrderListView.Items.Refresh(); // Refresh the ListView to ensure it updates
-        }
-
-        private void UpdateTotalPriceTextBlock()
-        {
-            totalPriceTextBlock.Text = $"Total Price: {totalPrice:0.00} SEK";
+            customerOrderListView.ItemsSource = null;
+            customerOrderListView.ItemsSource = customerOrder;
+            customerOrderListView.Items.Refresh();
         }
 
         private void ScrollToLastListViewItem(Product lastAddedProduct)
@@ -171,12 +193,10 @@ namespace PointOfSaleSystem
                 actionStack.Push(new ActionRecord { Product = existingProduct, ActionType = ActionType.Add });
             }
 
-            totalPrice += clickedProduct.Price;
+            UpdateTotalPrice(clickedProduct.Price);
 
             UpdateCustomerOrderListView();
-            UpdateTotalPriceTextBlock();
             ScrollToLastListViewItem(existingProduct);
-            Console.WriteLine("Hello");
         }
 
         private void payButton_Click(object sender, RoutedEventArgs e)
@@ -187,7 +207,6 @@ namespace PointOfSaleSystem
                 return;
             }
 
-            // Add purchased items to the purchase history
             foreach (var item in customerOrder)
             {
                 purchaseHistory.Add(new Product(item.Name, item.Price, item.Quantity));
@@ -210,11 +229,10 @@ namespace PointOfSaleSystem
             if (product != null)
             {
                 product.IncrementQuantity();
-                totalPrice += product.Price;
                 actionStack.Push(new ActionRecord { Product = product, ActionType = ActionType.Increment });
 
                 UpdateCustomerOrderListView();
-                UpdateTotalPriceTextBlock();
+                UpdateTotalPrice(product.Price);
             }
         }
 
@@ -228,24 +246,21 @@ namespace PointOfSaleSystem
                 if (product.Quantity > 1)
                 {
                     product.DecrementQuantity();
-                    totalPrice -= product.Price;
                     actionStack.Push(new ActionRecord { Product = product, ActionType = ActionType.Decrement });
                 }
                 else
                 {
                     customerOrder.Remove(product);
-                    totalPrice -= product.Price;
                     actionStack.Push(new ActionRecord { Product = product, ActionType = ActionType.Decrement });
                 }
 
                 UpdateCustomerOrderListView();
-                UpdateTotalPriceTextBlock();
+                UpdateTotalPrice(-product.Price);
             }
         }
 
         private void historyButton_Click(object sender, RoutedEventArgs e)
         {
-            // Display the purchase history
             if (purchaseHistory.Count == 0)
             {
                 ShowMessage("No purchase history available.", "Purchase History", MessageBoxImage.Information);
@@ -272,10 +287,7 @@ namespace PointOfSaleSystem
             ActionRecord lastAction = actionStack.Pop();
             Product lastProduct = lastAction.Product;
 
-            // Debug statements
-            Debug.WriteLine("Before Undo:");
-            Debug.WriteLine($"Total Price: {totalPrice}");
-            Debug.WriteLine($"Customer Order: {string.Join(", ", customerOrder.Select(p => p.Name))}");
+            decimal totalPrice = 0;
 
             switch (lastAction.ActionType)
             {
@@ -309,13 +321,8 @@ namespace PointOfSaleSystem
                     break;
             }
 
-            // Debug statements
-            Debug.WriteLine("After Undo:");
-            Debug.WriteLine($"Total Price: {totalPrice}");
-            Debug.WriteLine($"Customer Order: {string.Join(", ", customerOrder.Select(p => p.Name))}");
-
             UpdateCustomerOrderListView();
-            UpdateTotalPriceTextBlock();
+            UpdateTotalPrice(totalPrice);
             ScrollToLastListViewItem(lastProduct);
         }
     }
