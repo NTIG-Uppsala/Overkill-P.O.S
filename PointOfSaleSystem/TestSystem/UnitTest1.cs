@@ -295,6 +295,67 @@ namespace TestSystem
             );
         }
 
+        [TestMethod] // Add Espresso, undo, verify the order.
+        public void VerifyUndo()
+        {
+            ClickButton("Espresso", 1);
+            ClickButton("undoButton", 1);
+
+            VerifyReset();
+        }
+
+        [TestMethod] // Add Espresso, add Cappuccino, undo, verify the order.
+        public void VerifyUndoMultipleItems()
+        {
+            ClickButton("Espresso", 1);
+            ClickButton("Cappuccino", 1);
+            ClickButton("undoButton", 1);
+            VerifyOrder(
+                new string[] { "1" },
+                new string[] { "Espresso" },
+                "Total Price: 32,00 SEK"
+            );
+        }
+
+        [TestMethod] // Add Espresso, increment quantity, undo, verify the order.
+
+        public void VerifyUndoIncrement()
+        {
+            ClickButton("Espresso", 1);
+            ClickButton("IncrementButton_Espresso", 1);
+            ClickButton("undoButton", 1);
+            VerifyOrder(
+                new string[] { "1" },
+                new string[] { "Espresso" },
+                "Total Price: 32,00 SEK"
+            );
+        }
+
+        [TestMethod] // Add Espresso, decrement quantity, undo, verify the order.
+        public void VerifyUndoDecrement()
+        {
+            ClickButton("Espresso", 1);
+            ClickButton("DecrementButton_Espresso", 1);
+            ClickButton("undoButton", 1);
+            VerifyOrder(
+                new string[] { "1" },
+                new string[] { "Espresso" },
+                "Total Price: 32,00 SEK"
+            );
+        }
+
+        [TestMethod] // Add Espresso, reset, undo, verify the order.
+        public void VerifyUndoReset()
+        {
+            ClickButton("Espresso", 1);
+            ClickButton("resetButton", 1);
+            ClickButton("undoButton", 1);
+            VerifyOrder(
+                new string[] { "1" },
+                new string[] { "Espresso" },
+                "Total Price: 32,00 SEK"
+            );
+        }
         // ============================================================================
 
     }
