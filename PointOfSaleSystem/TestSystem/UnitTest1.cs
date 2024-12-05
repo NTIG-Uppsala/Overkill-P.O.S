@@ -92,7 +92,7 @@ namespace TestSystem
             Assert.AreEqual(0, customerOrderListView.Items.Length, "Order list is not empty after reset.");
 
             Assert.IsNotNull(totalPriceTextBlock, "Total price text block not found.");
-            Assert.AreEqual("Total Price: 0,00 SEK", totalPriceTextBlock.Text, "Total price not reset properly.");
+            Assert.AreEqual("Total Price: 0.00 SEK", totalPriceTextBlock.Text, "Total price not reset properly.");
         }
 
         // Gets the text of the message box.
@@ -121,7 +121,7 @@ namespace TestSystem
             VerifyOrder(
                 new string[] { "1" },
                 new string[] { "Espresso" },
-                "Total Price: 32,00 SEK"
+                "Total Price: 32.00 SEK"
             );
         }
 
@@ -133,7 +133,7 @@ namespace TestSystem
             VerifyOrder(
                 new string[] { "2" },
                 new string[] { "Tea" },
-                "Total Price: 51,98 SEK"
+                "Total Price: 51.98 SEK"
             );
 
             ClickButton("resetButton", 1);
@@ -151,7 +151,7 @@ namespace TestSystem
             VerifyOrder(
                 new string[] { "3" },
                 new string[] { "Macchiato" },
-                "Total Price: 77,25 SEK"
+                "Total Price: 77.25 SEK"
             );
         }
 
@@ -173,7 +173,7 @@ namespace TestSystem
             VerifyOrder(
                 new string[] { "1", "1", "1" },
                 new string[] { "Latte", "Americano", "Flat White" },
-                "Total Price: 61,58 SEK"
+                "Total Price: 61.58 SEK"
             );
         }
 
@@ -263,7 +263,7 @@ namespace TestSystem
             VerifyOrder(
                 new string[] { "2" },
                 new string[] { "Cappuccino" },
-                "Total Price: 60,66 SEK"
+                "Total Price: 60.66 SEK"
                 );
         }
 
@@ -277,7 +277,7 @@ namespace TestSystem
             VerifyOrder(
                 new string[] { "1" },
                 new string[] { "Cappuccino" },
-                "Total Price: 30,33 SEK"
+                "Total Price: 30.33 SEK"
             );
         }
 
@@ -291,7 +291,7 @@ namespace TestSystem
             VerifyOrder(
                 new string[] { "1" },
                 new string[] { "Espresso" },
-                "Total Price: 32,00 SEK"
+                "Total Price: 32.00 SEK"
             );
         }
 
@@ -313,7 +313,7 @@ namespace TestSystem
             VerifyOrder(
                 new string[] { "1" },
                 new string[] { "Espresso" },
-                "Total Price: 32,00 SEK"
+                "Total Price: 32.00 SEK"
             );
         }
 
@@ -327,7 +327,7 @@ namespace TestSystem
             VerifyOrder(
                 new string[] { "1" },
                 new string[] { "Espresso" },
-                "Total Price: 32,00 SEK"
+                "Total Price: 32.00 SEK"
             );
         }
 
@@ -340,7 +340,7 @@ namespace TestSystem
             VerifyOrder(
                 new string[] { "1" },
                 new string[] { "Espresso" },
-                "Total Price: 32,00 SEK"
+                "Total Price: 32.00 SEK"
             );
         }
 
@@ -353,7 +353,7 @@ namespace TestSystem
             VerifyOrder(
                 new string[] { "1" },
                 new string[] { "Espresso" },
-                "Total Price: 32,00 SEK"
+                "Total Price: 32.00 SEK"
             );
         }
 
