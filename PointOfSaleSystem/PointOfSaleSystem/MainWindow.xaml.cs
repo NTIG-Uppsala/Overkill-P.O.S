@@ -13,6 +13,7 @@ namespace PointOfSaleSystem
         private readonly List<Product> customerOrder = new List<Product>();
         private readonly List<Product> purchaseHistory = new List<Product>();
         private decimal totalPrice = 0;
+        private bool paymentMade = false; // Flag to track if payment has been made
 
         public class Product
         {
@@ -51,17 +52,17 @@ namespace PointOfSaleSystem
         }
 
         private readonly List<Product> products = new()
-                {
-                    new("Espresso", 32.0m),
-                    new("Latte", 20.33m),
-                    new("Cappuccino", 30.33m),
-                    new("Americano", 18.50m),
-                    new("Mocha", 35.50m),
-                    new("Flat White", 22.75m),
-                    new("Macchiato", 25.75m),
-                    new("Tea", 25.99m),
-                    new("Hot Chocolate", 28.99m)
-                };
+                        {
+                            new("Espresso", 32.0m),
+                            new("Latte", 20.33m),
+                            new("Cappuccino", 30.33m),
+                            new("Americano", 18.50m),
+                            new("Mocha", 35.50m),
+                            new("Flat White", 22.75m),
+                            new("Macchiato", 25.75m),
+                            new("Tea", 25.99m),
+                            new("Hot Chocolate", 28.99m)
+                        };
 
         private readonly Stack<ActionRecord> actionStack = new Stack<ActionRecord>();
 
@@ -119,7 +120,7 @@ namespace PointOfSaleSystem
                 PreviousOrderState = previousOrderState,
                 PreviousTotalPrice = previousTotalPrice
             });
-
+            paymentMade = false;
             customerOrder.Clear();
             totalPrice = 0;
             UpdateCustomerOrderListView();
@@ -155,6 +156,11 @@ namespace PointOfSaleSystem
         // ----------------- BUTTON CLICK EVENTS --------------------------------------------------
         private void ProductButton_Click(object sender, RoutedEventArgs e)
         {
+            if (paymentMade)
+            {
+                paymentMade = false; // Reset the payment made flag when a new order is started
+            }
+
             Button productButton = sender as Button;
             Product clickedProduct = productButton.Tag as Product;
 
@@ -193,7 +199,11 @@ namespace PointOfSaleSystem
                 purchaseHistory.Add(new Product(item.Name, item.Price, item.Quantity));
             }
 
+            // Clear the undo stack to make payment irreversible
+            actionStack.Clear();
+
             ResetOrder();
+            paymentMade = true; // Set the payment made flag
             ShowMessage("Payment confirmed", "Payment", MessageBoxImage.Information);
         }
 
@@ -263,9 +273,15 @@ namespace PointOfSaleSystem
 
         private void undoButton_Click(object sender, RoutedEventArgs e)
         {
+            if (paymentMade)
+            {
+                ShowMessage("You can't undo a payment", "Undo Error", MessageBoxImage.Warning);
+                return;
+            }
+
             if (actionStack.Count == 0)
             {
-                ShowMessage("No items to undo", "Undo Error", MessageBoxImage.Warning);
+                ShowMessage("No actions to undo or undo is disabled after payment", "Undo Error", MessageBoxImage.Warning);
                 return;
             }
 

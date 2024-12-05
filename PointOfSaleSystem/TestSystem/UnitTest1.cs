@@ -356,6 +356,28 @@ namespace TestSystem
                 "Total Price: 32,00 SEK"
             );
         }
+
+        [TestMethod] // Add Espresso, reset, undo, undo, verify the order.
+        public void VerifyUndoResetUndo()
+        {
+            ClickButton("Espresso", 1);
+            ClickButton("resetButton", 1);
+            ClickButton("undoButton", 1);
+            ClickButton("undoButton", 1);
+            VerifyReset();
+        }
+
+        [TestMethod] // Add Espresso, pay, undo pay (fail/not possible), verify the order.
+        public void VerifyUndoPay()
+        {
+            ClickButton("Espresso", 1);
+            ClickButton("payButton", 1);
+            CloseMessageBox();
+            ClickButton("undoButton", 1);
+            Assert.AreEqual("You can't undo a payment", GetMessageBoxText());
+            CloseMessageBox();
+        }
+
         // ============================================================================
 
     }
