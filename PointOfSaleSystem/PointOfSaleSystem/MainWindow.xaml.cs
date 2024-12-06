@@ -95,7 +95,7 @@ namespace PointOfSaleSystem
             new("Flat White", 22.75m),
             new("Macchiato", 25.75m),
             new("Tea", 25.99m),
-            new("Hot Chocolate", 28.99m)
+            new("Hot Chocolate", 28.99m),
         };
 
         private readonly Stack<ActionRecord> actionStack = new Stack<ActionRecord>();
@@ -116,7 +116,7 @@ namespace PointOfSaleSystem
                     FontSize = 14,
                     Background = new SolidColorBrush(Colors.LightGray),
                     Foreground = new SolidColorBrush(Colors.Black),
-                    Tag = product
+                    Tag = product,
                 };
 
                 productButton.SetValue(AutomationProperties.AutomationIdProperty, product.Name.Replace(" ", ""));
@@ -146,7 +146,7 @@ namespace PointOfSaleSystem
             {
                 ActionType = ActionType.Reset,
                 PreviousOrderState = previousOrderState,
-                PreviousTotalPrice = previousTotalPrice
+                PreviousTotalPrice = previousTotalPrice,
             });
             paymentMade = false;
             customerOrder.Clear();
