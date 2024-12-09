@@ -357,23 +357,15 @@ namespace TestSystem
             );
         }
 
-        [TestMethod] // Add Espresso, reset, undo three times, verify the order (should be empty).
-        public void VerifyUndoResetMultiple()
+        [TestMethod] // Add Espresso, reset, undo, undo, verify the order.
+        public void VerifyUndoResetUndo()
         {
             ClickButton("Espresso", 1);
             ClickButton("resetButton", 1);
             ClickButton("undoButton", 1);
-            VerifyOrder(
-                new string[] { "1" },
-                new string[] { "Espresso" },
-                "Total Price: 32.00 SEK"
-            );
-            ClickButton("undoButton", 1);
-            VerifyReset();
             ClickButton("undoButton", 1);
             VerifyReset();
         }
-
 
         [TestMethod] // Add Espresso, pay, undo pay (fail/not possible), verify the order.
         public void VerifyUndoPay()

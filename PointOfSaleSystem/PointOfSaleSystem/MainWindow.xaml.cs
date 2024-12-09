@@ -303,15 +303,13 @@ namespace PointOfSaleSystem
 
             ActionRecord lastAction = actionStack.Pop();
             Product lastProduct = lastAction.Product;
-            lastProduct = customerOrder.Find(p => p.Name == lastProduct.Name);
 
             decimal totalPrice = 0;
 
             switch (lastAction.ActionType)
             {
                 case ActionType.Add:
-                    //customerOrder.Remove(lastProduct);
-                    customerOrder.RemoveAll(p => p.Name == lastProduct.Name);
+                    customerOrder.Remove(lastProduct);
                     totalPrice -= lastProduct.Price;
                     break;
                 case ActionType.Increment:
@@ -334,8 +332,7 @@ namespace PointOfSaleSystem
                     totalPrice += lastProduct.Price;
                     break;
                 case ActionType.Reset:
-                    //ResetOrder();
-                    customerOrder.Clear();
+                    ResetOrder();
                     customerOrder.AddRange(lastAction.PreviousOrderState);
                     totalPrice = lastAction.PreviousTotalPrice;
                     break;
