@@ -323,14 +323,17 @@ namespace PointOfSaleSystem
                     totalPrice -= lastProduct.Price;
                     break;
                 case ActionType.Decrement:
-                    if (!customerOrder.Contains(lastProduct))
+                    if (lastProduct == null)
                     {
+                        // If the product was removed, recreate it and add it back to the order
+                        lastProduct = new Product(lastAction.Product.Name, lastAction.Product.Price, 1);
                         customerOrder.Add(lastProduct);
-                        totalPrice += lastProduct.Price;
-                        break;
                     }
-                    lastProduct.IncrementQuantity();
-                    totalPrice += lastProduct.Price;
+                    else
+                    {
+                        lastProduct.IncrementQuantity();
+                    }
+                    totalPrice += lastAction.Product.Price;
                     break;
                 case ActionType.Reset:
                     customerOrder.Clear();
