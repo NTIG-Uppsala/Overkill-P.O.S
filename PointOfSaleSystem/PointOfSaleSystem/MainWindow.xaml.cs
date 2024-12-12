@@ -182,6 +182,7 @@ namespace PointOfSaleSystem
             if (paymentMade)
             {
                 paymentMade = false; // Reset the payment made flag when a new order is started
+                actionStack.Clear(); // Clear the undo stack to allow undoing actions on the new order
             }
 
             Button productButton = sender as Button;
