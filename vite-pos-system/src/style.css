@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+@import '../public/material_theme_builder/light.css';
+@import '../public/material_theme_builder/light-mc.css';
+@import '../public/material_theme_builder/light-hc.css';
+@import '../public/material_theme_builder/dark.css';
+@import '../public/material_theme_builder/dark-mc.css';
+@import '../public/material_theme_builder/dark-hc.css';
+
+@theme {
+  --font-serif: 'Noto Serif', serif;
+  --font-sans: 'Noto Sans', sans-serif;
+  --font-mono: 'Nova Mono', monospace;
+}
