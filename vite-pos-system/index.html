@@ -3,10 +3,96 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="/src/style.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>POS system</title>
+    <title>Point Of Sale System</title>
   </head>
-  <body>
-    <div class="bg-blue-300 text-7xl">Initial commit</div>
+
+  <body class="bg-gray-100">
+    <div class="grid h-screen grid-cols-[80px_1fr_280px] gap-4 px-4 py-2">
+      <!-- Sidebar -->
+      <div class="flex flex-col items-center rounded-lg bg-white py-6 shadow-lg">
+        <div class="mb-10 flex flex-col items-center">
+          <span class="material-icons text-4xl text-gray-600">home</span>
+          <p class="mt-2 text-center text-xs">Home</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="material-icons text-4xl text-gray-600">restaurant_menu</span>
+          <p class="mt-2 text-center text-xs">Menu items</p>
+        </div>
+        <div class="mt-auto flex flex-col items-center">
+          <span class="material-icons text-4xl text-gray-600">settings</span>
+          <p class="mt-2 text-center text-xs">Settings</p>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="rounded-lg bg-white p-6 shadow-lg">
+        <div class="mb-6 flex items-center justify-between">
+          <h1 class="text-2xl font-semibold">All Items</h1>
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Search..."
+              class="w-64 rounded-lg border py-2 pr-10 pl-4 focus:ring-2 focus:ring-purple-600 focus:outline-none"
+            />
+            <span class="material-icons absolute top-2.5 right-3 text-gray-400">search</span>
+          </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="mb-6 flex gap-4">
+          <button class="rounded-full border border-purple-600 px-4 py-1 text-purple-600">
+            <span class="material-icons align-middle">cake</span> Pastries
+          </button>
+          <button class="rounded-full border border-purple-600 px-4 py-1 text-purple-600">
+            <span class="material-icons align-middle">local_drink</span> Beverages
+          </button>
+          <button class="rounded-full border border-purple-600 px-4 py-1 text-purple-600">
+            <span class="material-icons align-middle">lunch_dining</span> Lunch Meals
+          </button>
+          <button class="rounded-full border border-purple-600 px-4 py-1 text-purple-600">
+            <span class="material-icons align-middle">eco</span> Vegan Choice
+          </button>
+        </div>
+
+        <!-- Items Grid -->
+        <div class="grid grid-cols-3 gap-6">
+          <div class="rounded-lg bg-white p-4 text-center shadow-md">
+            <img src="img/espresso.jpg" alt="Espresso" class="mb-2 h-30 w-full rounded-md object-cover" />
+            <p class="font-medium">Espresso</p>
+          </div>
+          <div class="rounded-lg bg-white p-4 text-center shadow-md">
+            <img src="img/americano.jpg" alt="Americano" class="mb-2 h-30 w-full rounded-md object-cover" />
+            <p class="font-medium">Americano</p>
+          </div>
+          <div class="rounded-lg bg-white p-4 text-center shadow-md">
+            <img src="img/mocha.jpg" alt="Mocha" class="mb-2 h-30 w-full rounded-md object-cover" />
+            <p class="font-medium">Mocha</p>
+          </div>
+          <div class="rounded-lg bg-white p-4 text-center shadow-md">
+            <img src="img/hamburger.jpg" alt="Hamburger" class="mb-2 h-30 w-full rounded-md object-cover" />
+            <p class="font-medium">Hamburger</p>
+          </div>
+          <div class="rounded-lg bg-white p-4 text-center shadow-md">
+            <img src="img/vanilla-ice-cream.jpg" alt="Vanilla Ice Cream" class="mb-2 h-30 w-full rounded-md object-cover" />
+            <p class="font-medium">Vanilla Ice Cream</p>
+          </div>
+          <div class="rounded-lg bg-white p-4 text-center shadow-md">
+            <img src="img/chocolate-cake.jpg" alt="Chocolate Cake" class="mb-2 h-30 w-full rounded-md object-cover" />
+            <p class="font-medium">Chocolate Cake</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Panel -->
+      <div class="flex flex-col justify-between rounded-lg bg-white p-6 shadow-lg">
+        <h2 class="mb-4 text-xl font-semibold">Current Order</h2>
+        <div class="mt-auto flex gap-4">
+          <button class="flex-1 rounded-lg border border-purple-600 py-2 text-purple-600">Reset</button>
+          <button class="flex-1 rounded-lg bg-purple-600 py-2 text-white">Pay</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
