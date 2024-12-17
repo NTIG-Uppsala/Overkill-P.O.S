@@ -182,7 +182,6 @@ namespace PointOfSaleSystem
             if (paymentMade)
             {
                 paymentMade = false; // Reset the payment made flag when a new order is started
-                actionStack.Clear(); // Clear the undo stack to allow undoing actions on the new order
             }
 
             Button productButton = sender as Button;
@@ -220,12 +219,13 @@ namespace PointOfSaleSystem
                 purchaseHistory.Add(new Product(item.Name, item.Price, item.Quantity));
             }
 
-            // Clear the undo stack to make payment irreversible
-            actionStack.Clear();
-
+           
             ResetOrder();
             paymentMade = true; // Set the payment made flag
             ShowMessage("Payment confirmed", "Payment", MessageBoxImage.Information);
+
+            // Clear the undo stack to make payment irreversible after payment is made
+            actionStack.Clear();
         }
 
         private void resetButton_Click(object sender, RoutedEventArgs e)

@@ -378,6 +378,20 @@ namespace TestSystem
             CloseMessageBox();
         }
 
+        [TestMethod] // Add Espresso, pay, undo, add Espresso, undo, undo, no actions to undo, verify the order.
+        public void VerifyUndoPayUndo()
+        {
+            ClickButton("Espresso", 1);
+            ClickButton("payButton", 1);
+            CloseMessageBox();
+            ClickButton("Espresso", 1);
+            ClickButton("undoButton", 1);
+            ClickButton("undoButton", 1);
+            Assert.AreEqual("No actions to undo or undo is disabled after payment", GetMessageBoxText());
+            CloseMessageBox();
+        }
+
+
         // ============================================================================
 
     }
